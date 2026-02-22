@@ -162,7 +162,7 @@ main { max-width:960px; margin:0 auto; padding:28px 20px 140px; }
 .panel { display:none; }
 .panel.active { display:block; animation:fadeUp 0.25s ease; }
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════���════
    QURAN CONTROLS
 ═══════════════════════════════════════════ */
 .quran-controls {
@@ -350,7 +350,7 @@ body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
 
 /* ═══════════════════════════════════════════
    RUKU NAV
-═══════════════════════════════════════════ */
+���══════════════════════════════════════════ */
 .ruku-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
 .ruku-btn {
   background:var(--surface); border:1px solid var(--border);
@@ -830,7 +830,7 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
 
 <!-- ═══════════════════════════════════
      BOOKMARKS
-═══════════════════════════════════ -->
+═══��═══════════════════════════════ -->
 <div class="panel" id="panel-bookmarks">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
     <div>
@@ -905,6 +905,7 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
 
 </div><!-- #app -->
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  CONSTANTS
@@ -912,6 +913,11 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
 const API       = 'https://api.alquran.cloud/v1';
 const QURAN_COM = 'https://api.quran.com/api/v4';
 const HADITH_API= 'https://api.ahadith.co';
+
+// Supabase configuration
+const SUPABASE_URL = 'https://wmokfwxqxjyxhbdfavou.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indtb2tmd3hxeGp5eGhiZGZhdm91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU3NzIzNDEsImV4cCI6MTk0ODkyMzk0MX0.4C0Jjg7r2f4ry1PzFKJmcKFyG6Xc5h8Zu2d5KgF7e_Y';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ═══════════════════════════════════════════════════════
 //  STATE
@@ -1498,39 +1504,72 @@ function renderHadiths(list) {
 // ═══════════════════════════════════════════════════════
 const CAT_LABELS = { question:'❓ Question', reflection:'🌙 Reflection', tafsir:'📖 Tafsir', sunnah:'📿 Sunnah', general:'💬 General' };
 
-function loadPosts() {
-  try { const r=localStorage.getItem('noor_posts_v1'); if(r) S.posts=JSON.parse(r); } catch(e){}
-  // Seed with demo posts if empty
-  if (S.posts.length === 0) {
-    S.posts = [
-      { id:'p1', author:'Ibrahim', category:'question', body:'What is the significance of Surah Al-Kahf on Fridays? I have heard it provides light between the two Fridays.', timestamp: Date.now()-3600000*5, likes:['seed1','seed2'], replies:[{author:'Fatima',text:'Yes, the Prophet ﷺ said whoever reads it on Friday will have a light that shines between the two Fridays — Sahih narrations in Hakim and Bayhaqi confirm this.',time:Date.now()-3600000*4}] },
-      { id:'p2', author:'Aisha', category:'reflection', body:'Reading Ayat al-Kursi tonight and reflecting on كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ — His Kursi extends over the heavens and earth. SubhanAllah. The vastness of Allah\'s knowledge and dominion is beyond imagination.', timestamp:Date.now()-3600000*12, likes:['seed3'], replies:[] },
-      { id:'p3', author:'Yusuf', category:'tafsir', body:'Ibn Kathir\'s commentary on Surah Al-Baqarah 2:286 (Allah does not burden a soul beyond that it can bear) is incredibly moving. He mentions this was a relief to the Companions when the preceding verse about being held accountable even for inner thoughts was revealed.', timestamp:Date.now()-86400000, likes:[], replies:[] },
-    ];
-    savePosts();
+async function loadPosts() {
+  try {
+    const { data: posts, error } = await supabase
+      .from('posts')
+      .select('*, post_likes(user_id), replies(id, user_id, user_name, user_image, content, created_at)')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    S.posts = (posts || []).map(p => ({
+      id: p.id,
+      author: p.user_name || 'Anonymous',
+      user_image: p.user_image,
+      category: p.category,
+      body: p.content,
+      timestamp: new Date(p.created_at).getTime(),
+      likes: p.post_likes ? p.post_likes.map(l => l.user_id) : [],
+      replies: (p.replies || []).map(r => ({
+        id: r.id,
+        author: r.user_name || 'Anonymous',
+        user_image: r.user_image,
+        text: r.content,
+        time: new Date(r.created_at).getTime()
+      }))
+    }));
+  } catch(error) {
+    console.error('[v0] Error loading posts:', error);
+    S.posts = [];
   }
 }
-function savePosts() { try { localStorage.setItem('noor_posts_v1', JSON.stringify(S.posts)); } catch(e){} }
 
 function updateCharCount() {
   const val = document.getElementById('postBody').value;
   document.getElementById('charCount').textContent = val.length;
 }
 
-function submitPost() {
+async function submitPost() {
   const body = document.getElementById('postBody').value.trim();
   if (!body) { alert('Please write something first.'); return; }
   const author   = document.getElementById('postAuthor').value.trim() || 'Anonymous';
   const category = document.getElementById('postCategory').value;
-  const post = { id:'p'+Date.now(), author, category, body, timestamp:Date.now(), likes:[], replies:[] };
-  S.posts.unshift(post);
-  savePosts();
-  document.getElementById('postBody').value = '';
-  document.getElementById('postAuthor').value = '';
-  document.getElementById('charCount').textContent = '0';
-  S.postFilter = 'all';
-  document.querySelectorAll('.community-filters .pill').forEach((b,i)=>b.classList.toggle('active',i===0));
-  renderFeed();
+  
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .insert([{
+        user_id: getUID(),
+        user_name: author,
+        content: body,
+        category: category
+      }])
+      .select('*, post_likes(user_id), replies(id, user_id, user_name, user_image, content, created_at)');
+    
+    if (error) throw error;
+    
+    document.getElementById('postBody').value = '';
+    document.getElementById('postAuthor').value = '';
+    document.getElementById('charCount').textContent = '0';
+    S.postFilter = 'all';
+    document.querySelectorAll('.community-filters .pill').forEach((b,i)=>b.classList.toggle('active',i===0));
+    await loadPosts();
+    renderFeed();
+  } catch(error) {
+    console.error('[v0] Error submitting post:', error);
+    alert('Error posting. Please try again.');
+  }
 }
 
 function filterPosts(cat, btn) {
@@ -1540,20 +1579,40 @@ function filterPosts(cat, btn) {
   renderFeed();
 }
 
-function toggleLike(postId) {
+async function toggleLike(postId) {
   const post = S.posts.find(p=>p.id===postId);
   if (!post) return;
-  const uid = 'anon_' + (localStorage.getItem('noor_uid')||Math.random().toString(36).slice(2,8));
-  try { localStorage.setItem('noor_uid', uid.replace('anon_','')); } catch(e){}
-  const idx = post.likes.indexOf(uid);
-  if (idx > -1) { post.likes.splice(idx,1); } else { post.likes.push(uid); }
-  savePosts();
-  // Update just the like button
-  const btn = document.getElementById(`like-${postId}`);
-  if (btn) {
+  const uid = getUID();
+  
+  try {
     const liked = post.likes.includes(uid);
-    btn.className = `like-btn ${liked?'liked':''}`;
-    btn.innerHTML = `♡ ${post.likes.length}`;
+    if (liked) {
+      // Unlike
+      const { error } = await supabase
+        .from('post_likes')
+        .delete()
+        .eq('post_id', postId)
+        .eq('user_id', uid);
+      if (error) throw error;
+      post.likes = post.likes.filter(id => id !== uid);
+    } else {
+      // Like
+      const { error } = await supabase
+        .from('post_likes')
+        .insert([{ post_id: postId, user_id: uid }]);
+      if (error) throw error;
+      post.likes.push(uid);
+    }
+    
+    // Update just the like button
+    const btn = document.getElementById(`like-${postId}`);
+    if (btn) {
+      const isLiked = post.likes.includes(uid);
+      btn.className = `like-btn ${isLiked?'liked':''}`;
+      btn.innerHTML = `♡ ${post.likes.length}`;
+    }
+  } catch(error) {
+    console.error('[v0] Error toggling like:', error);
   }
 }
 
@@ -1562,20 +1621,54 @@ function toggleReplies(postId) {
   if (sec) sec.classList.toggle('open');
 }
 
-function submitReply(postId) {
+async function submitReply(postId) {
   const inp = document.getElementById(`reply-inp-${postId}`);
   const text = inp ? inp.value.trim() : '';
   if (!text) return;
   const post = S.posts.find(p=>p.id===postId);
   if (!post) return;
-  post.replies.push({ author:'Anonymous', text, time:Date.now() });
-  savePosts();
-  inp.value = '';
-  // Re-render reply list
-  const replyList = document.getElementById(`reply-list-${postId}`);
-  if (replyList) replyList.innerHTML = post.replies.map(r=>replyHTML(r)).join('');
-  const countEl = document.getElementById(`reply-count-${postId}`);
-  if (countEl) countEl.textContent = `${post.replies.length} reply${post.replies.length===1?'':'s'}`;
+  
+  try {
+    const { data, error } = await supabase
+      .from('replies')
+      .insert([{
+        post_id: postId,
+        user_id: getUID(),
+        user_name: 'Anonymous',
+        content: text
+      }])
+      .select();
+    
+    if (error) throw error;
+    
+    inp.value = '';
+    
+    // Reload the post to get updated replies
+    const { data: updatedPost, error: fetchError } = await supabase
+      .from('posts')
+      .select('*, replies(id, user_id, user_name, user_image, content, created_at)')
+      .eq('id', postId)
+      .single();
+    
+    if (fetchError) throw fetchError;
+    
+    post.replies = (updatedPost.replies || []).map(r => ({
+      id: r.id,
+      author: r.user_name || 'Anonymous',
+      user_image: r.user_image,
+      text: r.content,
+      time: new Date(r.created_at).getTime()
+    }));
+    
+    // Re-render reply list
+    const replyList = document.getElementById(`reply-list-${postId}`);
+    if (replyList) replyList.innerHTML = post.replies.map(r=>replyHTML(r)).join('');
+    const countEl = document.getElementById(`reply-count-${postId}`);
+    if (countEl) countEl.textContent = `${post.replies.length} reply${post.replies.length===1?'':'s'}`;
+  } catch(error) {
+    console.error('[v0] Error submitting reply:', error);
+    alert('Error posting reply. Please try again.');
+  }
 }
 
 function replyHTML(r) {
@@ -1601,9 +1694,12 @@ function escapeHTML(s) {
 }
 
 function getUID() {
-  let uid = localStorage.getItem('noor_uid');
-  if (!uid) { uid = Math.random().toString(36).slice(2,8); try{localStorage.setItem('noor_uid',uid);}catch(e){} }
-  return 'anon_'+uid;
+  let uid = sessionStorage.getItem('noor_uid');
+  if (!uid) { 
+    uid = Math.random().toString(36).slice(2,12); 
+    try { sessionStorage.setItem('noor_uid', uid); } catch(e){}
+  }
+  return uid;
 }
 
 function renderFeed() {
