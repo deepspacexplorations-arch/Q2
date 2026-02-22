@@ -8,733 +8,975 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Scheherazade+New:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0e14;
-    --surface: #111827;
-    --surface2: #1a2332;
-    --border: #2a3a52;
-    --gold: #c9a84c;
-    --gold-dim: #8a6f32;
-    --teal: #2dd4bf;
-    --teal-dim: #0f766e;
-    --text: #e8dcc8;
-    --text-dim: #8a9ab5;
-    --text-faint: #4a5a72;
-    --accent: #e8c87a;
-    --green: #4ade80;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════════════
+   THEME VARIABLES
+═══════════════════════════════════════════ */
+:root {
+  --bg:#e8f5f2; --surface:#ffffff; --surface2:#f0faf8;
+  --border:#b2d8d0; --gold:#2a7c6f; --gold-dim:#3d9e8e;
+  --teal:#1a6b5e; --teal-dim:#2a8070;
+  --text:#1a2e2a; --text-dim:#4a6b64; --text-faint:#8aaca6;
+  --accent:#1a6b5e; --green:#2a9d6e; --ruby:#c0392b;
+  --card-shadow: 0 2px 12px rgba(42,124,111,0.08);
+  --radius:14px; --header-bg:rgba(232,245,242,0.95);
+  --pattern-color:%232a7c6f;
+}
+body.theme-dark {
+  --bg:#0a0e14; --surface:#111827; --surface2:#1a2332;
+  --border:#2a3a52; --gold:#c9a84c; --gold-dim:#8a6f32;
+  --teal:#2dd4bf; --teal-dim:#0f766e;
+  --text:#e8dcc8; --text-dim:#8a9ab5; --text-faint:#4a5a72;
+  --accent:#e8c87a; --green:#4ade80;
+  --card-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  --header-bg:rgba(10,14,20,0.95);
+  --pattern-color:%23c9a84c;
+}
+body.theme-parchment {
+  --bg:#fdf6e3; --surface:#fffef9; --surface2:#faf3da;
+  --border:#e2d5a8; --gold:#8b6914; --gold-dim:#a07c1a;
+  --teal:#5a7a2e; --teal-dim:#6b8f38;
+  --text:#2c1810; --text-dim:#6b4c30; --text-faint:#b09070;
+  --accent:#8b6914; --green:#5a7a2e;
+  --card-shadow: 0 2px 12px rgba(139,105,20,0.1);
+  --header-bg:rgba(253,246,227,0.96);
+  --pattern-color:%238b6914;
+}
+body.theme-desert {
+  --bg:#f5ede0; --surface:#fdf8f2; --surface2:#f0e6d3;
+  --border:#d4b896; --gold:#c17f3a; --gold-dim:#a0642a;
+  --teal:#7a5c3a; --teal-dim:#8a6c4a;
+  --text:#2a1a0a; --text-dim:#6a4a2a; --text-faint:#b09070;
+  --accent:#c17f3a; --green:#6a8a3a;
+  --card-shadow: 0 2px 12px rgba(193,127,58,0.1);
+  --header-bg:rgba(245,237,224,0.96);
+  --pattern-color:%23c17f3a;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Crimson Pro', Georgia, serif;
-    font-size: 17px;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+/* ═══════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='0.3' opacity='0.10'%3E%3Cpolygon points='40,4 52,22 72,22 58,36 64,56 40,46 16,56 22,36 8,22 28,22'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Cpolygon points='40,16 48,30 64,30 52,40 56,56 40,48 24,56 28,40 16,30 32,30'/%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0;
-  }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Crimson Pro', Georgia, serif;
+  font-size:var(--base-font, 17px);
+  line-height:1.75; min-height:100vh;
+  transition: background 0.3s, color 0.3s;
+}
 
-  #app { position: relative; z-index: 1; }
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cg fill='none' stroke='%232a7c6f' stroke-width='0.4' opacity='0.07'%3E%3Cpolygon points='50,6 62,28 88,28 68,44 76,68 50,54 24,68 32,44 12,28 38,28'/%3E%3Ccircle cx='50' cy='50' r='22'/%3E%3Cpolygon points='50,20 58,36 76,36 62,46 68,64 50,54 32,64 38,46 24,36 42,36'/%3E%3C/g%3E%3C/svg%3E");
+}
 
-  /* HEADER */
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 32px; border-bottom: 1px solid var(--border);
-    background: rgba(10,14,20,0.93); backdrop-filter: blur(14px);
-    position: sticky; top: 0; z-index: 100;
-    gap: 12px; flex-wrap: wrap;
-  }
-  .logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px; font-weight: 600; color: var(--gold);
-    letter-spacing: 0.08em; cursor: pointer; user-select: none;
-  }
-  .logo span { color: var(--text-dim); font-weight: 300; font-size: 15px; margin-left: 10px; letter-spacing: 0.15em; }
+#app { position:relative; z-index:1; }
 
-  nav { display: flex; gap: 4px; flex-wrap: wrap; }
-  nav button {
-    background: none; border: none; cursor: pointer;
-    padding: 8px 16px; border-radius: 6px;
-    color: var(--text-dim); font-family: 'Crimson Pro', serif;
-    font-size: 15px; letter-spacing: 0.04em; transition: all 0.2s;
-  }
-  nav button:hover { color: var(--text); background: var(--surface2); }
-  nav button.active { color: var(--gold); background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.22); }
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 28px; border-bottom:1px solid var(--border);
+  background:var(--header-bg); backdrop-filter:blur(14px);
+  position:sticky; top:0; z-index:200; gap:12px; flex-wrap:wrap;
+  box-shadow:0 1px 8px rgba(0,0,0,0.06);
+}
+.logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size:24px; font-weight:600; color:var(--gold);
+  letter-spacing:0.08em; cursor:pointer; user-select:none;
+  display:flex; align-items:baseline; gap:8px;
+}
+.logo-sub { color:var(--text-faint); font-weight:300; font-size:13px; letter-spacing:0.18em; }
 
-  .header-right { display: flex; align-items: center; gap: 10px; }
-  .global-search {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 7px 13px;
-  }
-  .global-search input {
-    background: none; border: none; outline: none;
-    color: var(--text); font-family: 'Crimson Pro', serif;
-    font-size: 15px; width: 170px;
-  }
-  .global-search input::placeholder { color: var(--text-faint); }
+nav { display:flex; gap:2px; }
+nav button {
+  background:none; border:none; cursor:pointer;
+  padding:8px 15px; border-radius:8px;
+  color:var(--text-dim); font-family:'Crimson Pro', serif;
+  font-size:15px; letter-spacing:0.04em; transition:all 0.2s;
+}
+nav button:hover { color:var(--text); background:var(--surface2); }
+nav button.active {
+  color:var(--gold); background:rgba(42,124,111,0.1);
+  border:1px solid rgba(42,124,111,0.25);
+}
+body.theme-dark nav button.active { background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.25); }
+body.theme-desert nav button.active { background:rgba(193,127,58,0.1); border-color:rgba(193,127,58,0.25); }
 
-  /* MAIN */
-  main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 130px; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+.header-right { display:flex; align-items:center; gap:8px; }
 
-  /* QURAN CONTROLS */
-  .quran-controls {
-    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .select-wrap { position: relative; flex: 1; min-width: 160px; }
-  .select-wrap select {
-    width: 100%; appearance: none;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-family: 'Crimson Pro', serif;
-    font-size: 15px; padding: 10px 34px 10px 14px;
-    border-radius: 8px; cursor: pointer; outline: none; transition: border-color 0.2s;
-  }
-  .select-wrap select:hover, .select-wrap select:focus { border-color: var(--gold-dim); }
-  .select-wrap::after {
-    content: '▾'; position: absolute; right: 12px;
-    top: 50%; transform: translateY(-50%);
-    color: var(--gold-dim); pointer-events: none; font-size: 13px;
-  }
+.global-search {
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:22px; padding:7px 14px;
+  transition:border-color 0.2s; box-shadow:var(--card-shadow);
+}
+.global-search:focus-within { border-color:var(--gold); }
+.global-search input {
+  background:none; border:none; outline:none;
+  color:var(--text); font-family:'Crimson Pro', serif;
+  font-size:14px; width:160px;
+}
+.global-search input::placeholder { color:var(--text-faint); }
 
-  .view-toggle {
-    display: flex; border: 1px solid var(--border);
-    border-radius: 8px; overflow: hidden; flex-shrink: 0;
-  }
-  .view-toggle button {
-    background: var(--surface); border: none; cursor: pointer;
-    padding: 10px 15px; color: var(--text-dim);
-    font-family: 'Crimson Pro', serif; font-size: 13px;
-    transition: all 0.2s; letter-spacing: 0.04em;
-  }
-  .view-toggle button.active { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .view-toggle button + button { border-left: 1px solid var(--border); }
+/* Theme + font bar */
+.toolbar {
+  width:100%; display:flex; align-items:center; gap:10px;
+  padding:8px 28px; border-bottom:1px solid var(--border);
+  background:var(--surface2); flex-wrap:wrap;
+}
+.theme-btns { display:flex; gap:6px; }
+.theme-btn {
+  width:22px; height:22px; border-radius:50%; border:2px solid transparent;
+  cursor:pointer; transition:all 0.2s; outline:none;
+  box-shadow:0 1px 4px rgba(0,0,0,0.15);
+}
+.theme-btn:hover, .theme-btn.active { border-color:var(--text); transform:scale(1.15); }
+.theme-btn.t-sea    { background:linear-gradient(135deg,#2a7c6f,#e8f5f2); }
+.theme-btn.t-dark   { background:linear-gradient(135deg,#0a0e14,#c9a84c); }
+.theme-btn.t-parch  { background:linear-gradient(135deg,#fdf6e3,#8b6914); }
+.theme-btn.t-desert { background:linear-gradient(135deg,#f5ede0,#c17f3a); }
 
-  /* TOGGLE CHIPS */
-  .toggle-row {
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  .toggle-chip {
-    display: flex; align-items: center; gap: 7px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px; padding: 5px 13px; cursor: pointer;
-    font-size: 13px; color: var(--text-dim); transition: all 0.2s; user-select: none;
-  }
-  .toggle-chip.on { border-color: var(--gold-dim); color: var(--gold); background: rgba(201,168,76,0.08); }
-  .toggle-chip .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--text-faint); transition: background 0.2s;
-  }
-  .toggle-chip.on .dot { background: var(--gold); }
+.font-ctrl { display:flex; align-items:center; gap:8px; margin-left:auto; }
+.font-ctrl label { font-size:12px; color:var(--text-faint); letter-spacing:0.08em; text-transform:uppercase; }
+.font-slider {
+  -webkit-appearance:none; appearance:none;
+  width:100px; height:3px; background:var(--border);
+  border-radius:2px; outline:none; cursor:pointer;
+}
+.font-slider::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  border-radius:50%; background:var(--gold); cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+.font-size-label {
+  font-size:12px; color:var(--text-dim); min-width:28px; text-align:center;
+}
 
-  /* SURAH HEADER */
-  .surah-header {
-    text-align: center; margin-bottom: 26px;
-    padding: 28px 24px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    position: relative; overflow: hidden;
-  }
-  .surah-header::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
-  }
-  .surah-name-ar {
-    font-family: 'Scheherazade New', serif;
-    font-size: 42px; color: var(--gold); line-height: 1.3; margin-bottom: 8px; direction: rtl;
-  }
-  .surah-name-en {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; font-weight: 300; color: var(--text);
-    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;
-  }
-  .surah-meta { color: var(--text-dim); font-size: 14px; letter-spacing: 0.08em; }
-  .bismillah {
-    font-family: 'Scheherazade New', serif;
-    font-size: 32px; color: var(--accent); direction: rtl;
-    margin-top: 18px; text-shadow: 0 0 40px rgba(201,168,76,0.3);
-  }
+/* ═══════════════════════════════════════════
+   MAIN
+═══════════════════════════════════════════ */
+main { max-width:960px; margin:0 auto; padding:28px 20px 140px; }
+.panel { display:none; }
+.panel.active { display:block; animation:fadeUp 0.25s ease; }
 
-  /* VERSE CARD */
-  .verse-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); margin-bottom: 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    overflow: hidden; animation: fadeUp 0.3s ease forwards;
-  }
-  .verse-card:hover { border-color: rgba(201,168,76,0.32); }
-  .verse-card.playing { border-color: var(--teal); box-shadow: 0 0 18px rgba(45,212,191,0.1); }
-  .verse-card.bookmarked { border-left: 3px solid var(--gold); }
-  .verse-card.ruku-start { border-top: 2px solid var(--gold-dim); }
+/* ═══════════════════════════════════════════
+   QURAN CONTROLS
+═══════════════════════════════════════════ */
+.quran-controls {
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;
+}
+.sel-wrap { position:relative; flex:1; min-width:150px; }
+.sel-wrap select {
+  width:100%; appearance:none;
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text); font-family:'Crimson Pro', serif;
+  font-size:15px; padding:10px 32px 10px 14px;
+  border-radius:10px; cursor:pointer; outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  box-shadow:var(--card-shadow);
+}
+.sel-wrap select:hover, .sel-wrap select:focus { border-color:var(--gold); }
+.sel-wrap::after {
+  content:'▾'; position:absolute; right:12px;
+  top:50%; transform:translateY(-50%);
+  color:var(--gold-dim); pointer-events:none; font-size:12px;
+}
 
-  .verse-top { display: flex; align-items: flex-start; gap: 12px; padding: 16px 16px 0; }
-  .verse-actions { display: flex; flex-direction: column; gap: 6px; align-items: center; flex-shrink: 0; }
-  .verse-number {
-    display: flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px;
-    border: 1px solid var(--gold-dim); border-radius: 50%;
-    font-size: 12px; color: var(--gold);
-    font-family: 'Cormorant Garamond', serif;
-    cursor: pointer; transition: all 0.2s; position: relative; flex-shrink: 0;
-  }
-  .verse-number:hover, .verse-number.playing { background: var(--gold); color: var(--bg); }
-  .verse-number .play-icon { display: none; position: absolute; font-size: 10px; }
-  .verse-number:hover .num-text { display: none; }
-  .verse-number:hover .play-icon { display: block; }
+.view-toggle {
+  display:flex; border:1px solid var(--border);
+  border-radius:10px; overflow:hidden; flex-shrink:0;
+  box-shadow:var(--card-shadow);
+}
+.view-toggle button {
+  background:var(--surface); border:none; cursor:pointer;
+  padding:10px 15px; color:var(--text-dim);
+  font-family:'Crimson Pro', serif; font-size:13px;
+  transition:all 0.2s;
+}
+.view-toggle button.active { background:var(--gold); color:#fff; }
+.view-toggle button+button { border-left:1px solid var(--border); }
 
-  .bm-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--text-faint); font-size: 15px;
-    transition: color 0.2s; padding: 2px; line-height: 1;
-  }
-  .bm-btn:hover { color: var(--gold); }
-  .bm-btn.active { color: var(--gold); }
+/* Toggle row */
+.toggle-row {
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:20px;
+}
+.chip {
+  display:flex; align-items:center; gap:7px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:5px 14px; cursor:pointer;
+  font-size:13px; color:var(--text-dim); transition:all 0.2s; user-select:none;
+  box-shadow:var(--card-shadow);
+}
+.chip.on { border-color:var(--gold); color:var(--gold); background:var(--surface2); }
+.chip .dot { width:7px; height:7px; border-radius:50%; background:var(--text-faint); transition:background 0.2s; flex-shrink:0; }
+.chip.on .dot { background:var(--gold); }
 
-  .verse-arabic {
-    flex: 1; text-align: right; direction: rtl;
-    font-family: 'Scheherazade New', serif;
-    font-size: 28px; line-height: 2.0; color: var(--text);
-    cursor: pointer; transition: color 0.2s;
-  }
-  .verse-card.playing .verse-arabic { color: var(--accent); }
+/* ═══════════════════════════════════════════
+   SURAH HEADER
+═══════════════════════════════════════════ */
+.surah-header {
+  text-align:center; margin-bottom:24px; padding:32px 24px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); position:relative; overflow:hidden;
+  box-shadow:var(--card-shadow);
+}
+.surah-header::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(42,124,111,0.06) 0%, transparent 70%);
+}
+body.theme-dark .surah-header::before { background:linear-gradient(135deg,rgba(201,168,76,0.05) 0%,transparent 70%); }
+.surah-name-ar {
+  font-family:'Scheherazade New', serif;
+  font-size:46px; color:var(--gold); line-height:1.4; margin-bottom:8px; direction:rtl;
+}
+.surah-name-en {
+  font-family:'Cormorant Garamond', serif;
+  font-size:22px; font-weight:300; color:var(--text);
+  letter-spacing:0.14em; text-transform:uppercase; margin-bottom:6px;
+}
+.surah-meta { color:var(--text-faint); font-size:13px; letter-spacing:0.1em; }
+.bismillah {
+  font-family:'Scheherazade New', serif; font-size:30px;
+  color:var(--accent); direction:rtl; margin-top:20px;
+  opacity:0.85;
+}
 
-  .verse-transliteration {
-    padding: 4px 16px 0 64px;
-    color: var(--text-faint); font-size: 14px;
-    font-style: italic; letter-spacing: 0.02em; line-height: 1.6;
-  }
-  .verse-translation {
-    padding: 10px 16px 14px 64px;
-    color: var(--text-dim); font-size: 16px;
-    line-height: 1.75; font-style: italic;
-    border-top: 1px solid rgba(42,58,82,0.5); margin-top: 10px;
-  }
-  .verse-translation .translator {
-    font-style: normal; font-size: 11px;
-    color: var(--text-faint); margin-bottom: 4px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-  }
+/* ═══════════════════════════════════════════
+   VERSE CARD
+═══════════════════════════════════════════ */
+.verse-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); margin-bottom:10px;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  overflow:hidden; box-shadow:var(--card-shadow);
+}
+.verse-card:hover { border-color:var(--gold-dim); box-shadow:0 4px 20px rgba(42,124,111,0.12); }
+.verse-card.playing { border-color:var(--gold); box-shadow:0 0 0 2px rgba(42,124,111,0.15); }
+body.theme-dark .verse-card.playing { box-shadow:0 0 0 2px rgba(201,168,76,0.2); }
+.verse-card.bookmarked { border-left:3px solid var(--gold); }
+.verse-card.ruku-start { border-top:2px solid var(--gold-dim); }
 
-  .verse-footer { display: flex; align-items: center; gap: 8px; padding: 4px 16px 10px 64px; }
-  .ruku-tag {
-    font-size: 11px; color: var(--gold-dim);
-    border: 1px solid var(--gold-dim); border-radius: 3px;
-    padding: 1px 6px; letter-spacing: 0.06em;
-  }
-  .tafsir-btn {
-    font-size: 11px; color: var(--teal-dim);
-    border: 1px solid var(--teal-dim); border-radius: 3px;
-    padding: 1px 8px; cursor: pointer; background: none;
-    font-family: 'Crimson Pro', serif; letter-spacing: 0.04em;
-    transition: all 0.2s;
-  }
-  .tafsir-btn:hover { color: var(--teal); border-color: var(--teal); }
+.verse-top { display:flex; align-items:flex-start; gap:12px; padding:16px 16px 0; }
+.verse-actions { display:flex; flex-direction:column; gap:6px; align-items:center; flex-shrink:0; }
 
-  .audio-wave { display: flex; gap: 2px; align-items: center; height: 16px; opacity: 0; }
-  .verse-card.playing .audio-wave { opacity: 1; }
-  .audio-wave span {
-    width: 2px; background: var(--teal); border-radius: 1px;
-    animation: wave 0.8s ease-in-out infinite;
-  }
-  .audio-wave span:nth-child(2) { animation-delay: 0.1s; }
-  .audio-wave span:nth-child(3) { animation-delay: 0.2s; }
-  .audio-wave span:nth-child(4) { animation-delay: 0.3s; }
+.verse-number {
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border:1.5px solid var(--gold-dim); border-radius:50%;
+  font-size:12px; color:var(--gold); font-family:'Cormorant Garamond', serif;
+  cursor:pointer; transition:all 0.2s; position:relative; flex-shrink:0;
+}
+.verse-number:hover, .verse-number.playing { background:var(--gold); color:#fff; }
+.verse-number .play-icon { display:none; position:absolute; font-size:9px; }
+.verse-number:hover .num-text { display:none; }
+.verse-number:hover .play-icon { display:block; }
 
-  /* TAFSIR PANEL */
-  .tafsir-panel {
-    display: none; margin: 0 16px 14px 64px;
-    background: rgba(15,118,110,0.07); border: 1px solid rgba(45,212,191,0.18);
-    border-radius: 8px; padding: 16px; animation: fadeUp 0.2s ease;
-  }
-  .tafsir-panel.open { display: block; }
-  .tafsir-header {
-    font-size: 11px; color: var(--teal);
-    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .tafsir-header::before { content: '◈'; font-size: 10px; }
-  .tafsir-text { font-size: 15px; line-height: 1.8; color: var(--text-dim); font-style: italic; }
+.bm-btn {
+  background:none; border:none; cursor:pointer;
+  color:var(--text-faint); font-size:15px; transition:color 0.2s; padding:2px; line-height:1;
+}
+.bm-btn:hover { color:var(--gold); }
+.bm-btn.active { color:var(--gold); }
 
-  /* RUKU NAV */
-  .ruku-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .ruku-btn {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text-dim); font-family: 'Crimson Pro', serif;
-    font-size: 13px; padding: 6px 14px; border-radius: 6px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .ruku-btn:hover, .ruku-btn.active { background: rgba(201,168,76,0.1); color: var(--gold); border-color: var(--gold-dim); }
+.verse-arabic {
+  flex:1; text-align:right; direction:rtl;
+  font-family:'Scheherazade New', serif;
+  font-size:calc(var(--base-font, 17px) + 11px);
+  line-height:2.1; color:var(--text); cursor:pointer; transition:color 0.2s;
+}
+.verse-card.playing .verse-arabic { color:var(--gold); }
 
-  /* LOADER */
-  .loader { text-align: center; padding: 60px; color: var(--text-dim); font-size: 15px; }
-  .loader .spinner {
-    width: 30px; height: 30px; border: 2px solid var(--border);
-    border-top-color: var(--gold); border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 0 auto 14px;
-  }
+.verse-transliteration {
+  padding:4px 16px 0 62px;
+  color:var(--text-faint); font-size:calc(var(--base-font, 17px) - 2px);
+  font-style:italic; letter-spacing:0.02em; line-height:1.6;
+}
 
-  /* SUNNAH */
-  .sunnah-controls { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
-  .search-bar {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 200px;
-  }
-  .search-bar input {
-    background: none; border: none; outline: none;
-    color: var(--text); font-family: 'Crimson Pro', serif;
-    font-size: 16px; width: 100%;
-  }
-  .search-bar input::placeholder { color: var(--text-faint); }
+.verse-translation {
+  padding:10px 16px 14px 62px;
+  color:var(--text-dim); font-size:var(--base-font, 17px);
+  line-height:1.8; border-top:1px solid var(--border); margin-top:10px;
+}
+.verse-translation .translator {
+  font-size:11px; color:var(--text-faint); margin-bottom:5px;
+  letter-spacing:0.1em; text-transform:uppercase; font-style:normal;
+}
 
-  .cat-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .pill {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text-dim); font-size: 13px; padding: 5px 13px;
-    border-radius: 20px; cursor: pointer; transition: all 0.2s;
-    font-family: 'Crimson Pro', serif; letter-spacing: 0.04em;
-  }
-  .pill:hover, .pill.active { background: rgba(201,168,76,0.1); color: var(--gold); border-color: var(--gold-dim); }
+.verse-footer { display:flex; align-items:center; gap:8px; padding:4px 16px 10px 62px; flex-wrap:wrap; }
+.ruku-tag {
+  font-size:11px; color:var(--gold-dim); border:1px solid var(--gold-dim);
+  border-radius:4px; padding:1px 7px; letter-spacing:0.06em;
+}
+.tafsir-btn {
+  font-size:11px; color:var(--teal-dim); border:1px solid var(--teal-dim);
+  border-radius:4px; padding:1px 8px; cursor:pointer; background:none;
+  font-family:'Crimson Pro', serif; letter-spacing:0.04em; transition:all 0.2s;
+}
+.tafsir-btn:hover { color:var(--teal); border-color:var(--teal); }
 
-  .book-row { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-  .book-row label { color: var(--text-dim); font-size: 14px; flex-shrink: 0; }
-  .book-row select {
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-family: 'Crimson Pro', serif;
-    font-size: 14px; padding: 7px 12px; border-radius: 7px; cursor: pointer; outline: none;
-  }
+.audio-wave { display:flex; gap:2px; align-items:center; height:16px; opacity:0; }
+.verse-card.playing .audio-wave { opacity:1; }
+.audio-wave span {
+  width:2px; background:var(--gold); border-radius:1px;
+  animation:wave 0.8s ease-in-out infinite;
+}
+.audio-wave span:nth-child(2) { animation-delay:0.1s; }
+.audio-wave span:nth-child(3) { animation-delay:0.2s; }
+.audio-wave span:nth-child(4) { animation-delay:0.3s; }
 
-  .action-btn {
-    background: rgba(201,168,76,0.1); border: 1px solid var(--gold-dim);
-    color: var(--gold); font-family: 'Crimson Pro', serif;
-    font-size: 14px; padding: 7px 18px; border-radius: 7px;
-    cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-  }
-  .action-btn:hover { background: rgba(201,168,76,0.2); }
+/* ═══════════════════════════════════════════
+   TAFSIR PANEL
+═══════════════════════════════════════════ */
+.tafsir-panel {
+  display:none; margin:0 16px 14px 62px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-left:3px solid var(--teal); border-radius:10px; padding:16px;
+}
+.tafsir-panel.open { display:block; animation:fadeUp 0.2s ease; }
+.tafsir-source-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+.tafsir-tab {
+  font-size:12px; padding:4px 12px; border-radius:12px; cursor:pointer;
+  border:1px solid var(--border); background:var(--surface);
+  color:var(--text-dim); transition:all 0.2s; font-family:'Crimson Pro', serif;
+}
+.tafsir-tab.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
+.tafsir-content-area {
+  font-size:calc(var(--base-font, 17px) - 1px); line-height:1.82;
+  color:var(--text-dim); font-style:italic;
+}
 
-  .hadith-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 22px; margin-bottom: 12px;
-    transition: border-color 0.2s; animation: fadeUp 0.25s ease forwards;
-  }
-  .hadith-card:hover { border-color: rgba(201,168,76,0.3); }
-  .hadith-arabic {
-    font-family: 'Scheherazade New', serif;
-    font-size: 22px; direction: rtl; text-align: right;
-    color: var(--accent); line-height: 2; margin-bottom: 14px;
-    border-right: 3px solid var(--gold-dim); padding-right: 14px;
-  }
-  .hadith-text { font-size: 16px; line-height: 1.8; color: var(--text); margin-bottom: 12px; }
-  .hadith-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .hadith-source { font-size: 13px; color: var(--gold-dim); letter-spacing: 0.05em; }
-  .hadith-grade {
-    font-size: 12px; padding: 2px 8px; border-radius: 4px;
-    background: rgba(192,57,43,0.15); color: #e87464; border: 1px solid rgba(192,57,43,0.3);
-  }
-  .hadith-grade.sahih { background: rgba(74,222,128,0.1); color: var(--green); border-color: rgba(74,222,128,0.3); }
-  .hadith-grade.hasan { background: rgba(45,212,191,0.1); color: var(--teal); border-color: rgba(45,212,191,0.3); }
+/* ═══════════════════════════════════════════
+   RUKU NAV
+═══════════════════════════════════════════ */
+.ruku-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+.ruku-btn {
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text-dim); font-family:'Crimson Pro', serif;
+  font-size:13px; padding:5px 13px; border-radius:8px;
+  cursor:pointer; transition:all 0.2s; box-shadow:var(--card-shadow);
+}
+.ruku-btn:hover, .ruku-btn.active { background:var(--gold); color:#fff; border-color:var(--gold); }
 
-  /* SEARCH RESULTS */
-  .search-result {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 20px; margin-bottom: 12px;
-    cursor: pointer; transition: all 0.2s; animation: fadeUp 0.25s ease forwards;
-  }
-  .search-result:hover { border-color: var(--gold-dim); }
-  .search-result .ref { font-size: 13px; color: var(--gold-dim); letter-spacing: 0.08em; margin-bottom: 8px; }
-  .search-result .arabic {
-    font-family: 'Scheherazade New', serif;
-    font-size: 22px; direction: rtl; text-align: right;
-    color: var(--accent); line-height: 1.9; margin-bottom: 8px;
-  }
-  .search-result .translation { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
-  .search-result .translation em { color: var(--gold); font-style: normal; }
+/* ═══════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════ */
+.loader { text-align:center; padding:60px; color:var(--text-faint); font-size:15px; }
+.spinner {
+  width:28px; height:28px; border:2px solid var(--border);
+  border-top-color:var(--gold); border-radius:50%;
+  animation:spin 0.8s linear infinite; margin:0 auto 14px;
+}
 
-  /* BOOKMARKS */
-  .bm-empty { text-align: center; padding: 50px; color: var(--text-dim); font-size: 15px; }
-  .bm-empty .big { font-size: 40px; margin-bottom: 12px; opacity: 0.3; }
-  .bm-verse-card {
-    background: var(--surface); border: 1px solid var(--gold-dim);
-    border-left: 3px solid var(--gold); border-radius: var(--radius);
-    padding: 18px 20px; margin-bottom: 12px; cursor: pointer;
-    transition: all 0.2s; animation: fadeUp 0.25s ease forwards; position: relative;
-  }
-  .bm-verse-card:hover { box-shadow: 0 0 16px rgba(201,168,76,0.1); }
-  .bm-ref { font-size: 12px; color: var(--gold-dim); letter-spacing: 0.08em; margin-bottom: 8px; }
-  .bm-arabic {
-    font-family: 'Scheherazade New', serif;
-    font-size: 24px; direction: rtl; text-align: right;
-    color: var(--accent); line-height: 1.9; margin-bottom: 8px;
-  }
-  .bm-translation { color: var(--text-dim); font-size: 15px; line-height: 1.6; font-style: italic; }
-  .bm-remove {
-    position: absolute; top: 14px; right: 14px;
-    background: none; border: none; color: var(--text-faint);
-    cursor: pointer; font-size: 15px; transition: color 0.2s; padding: 4px;
-  }
-  .bm-remove:hover { color: #e87464; }
+/* ═══════════════════════════════════════════
+   SEARCH PANEL
+═══════════════════════════════════════════ */
+.search-bar {
+  display:flex; align-items:center; gap:10px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:10px 16px; flex:1; min-width:200px;
+  box-shadow:var(--card-shadow);
+}
+.search-bar input {
+  background:none; border:none; outline:none;
+  color:var(--text); font-family:'Crimson Pro', serif;
+  font-size:var(--base-font, 17px); width:100%;
+}
+.search-bar input::placeholder { color:var(--text-faint); }
 
-  /* AUDIO BAR */
-  #audio-bar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(17,24,39,0.97); backdrop-filter: blur(14px);
-    border-top: 1px solid var(--border); padding: 12px 28px;
-    display: none; align-items: center; gap: 18px; z-index: 200;
-  }
-  #audio-bar.visible { display: flex; }
-  .audio-info { flex: 1; min-width: 0; }
-  .audio-info .ref { font-size: 11px; color: var(--gold-dim); letter-spacing: 0.08em; }
-  .audio-info .arabic-preview {
-    font-family: 'Scheherazade New', serif; font-size: 18px;
-    direction: rtl; color: var(--accent);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  #audio-progress {
-    flex: 1; max-width: 200px; height: 3px; background: var(--border);
-    border-radius: 2px; cursor: pointer; position: relative; flex-shrink: 0;
-  }
-  #audio-fill { height: 100%; background: var(--gold); border-radius: 2px; width: 0%; transition: width 0.2s; }
-  .audio-controls { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-  .audio-btn {
-    background: none; border: 1px solid var(--border); color: var(--text-dim);
-    padding: 7px 13px; border-radius: 6px; cursor: pointer;
-    font-size: 16px; transition: all 0.2s;
-  }
-  .audio-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
-  .audio-btn.primary { background: rgba(201,168,76,0.15); border-color: var(--gold-dim); color: var(--gold); }
+.action-btn {
+  background:var(--gold); border:none; color:#fff;
+  font-family:'Crimson Pro', serif; font-size:14px;
+  padding:10px 22px; border-radius:10px; cursor:pointer;
+  transition:opacity 0.2s; flex-shrink:0;
+}
+.action-btn:hover { opacity:0.85; }
 
-  /* UTILS */
-  .empty { text-align: center; padding: 60px; color: var(--text-dim); font-size: 16px; }
-  .empty .big { font-size: 42px; margin-bottom: 12px; opacity: 0.35; }
+.search-result {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px; margin-bottom:10px;
+  cursor:pointer; transition:all 0.2s; box-shadow:var(--card-shadow);
+}
+.search-result:hover { border-color:var(--gold); }
+.search-result .ref { font-size:12px; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:8px; }
+.search-result .arabic {
+  font-family:'Scheherazade New', serif; font-size:22px;
+  direction:rtl; text-align:right; color:var(--accent); line-height:1.9; margin-bottom:8px;
+}
+.search-result .translation { color:var(--text-dim); font-size:15px; line-height:1.6; }
+.search-result .translation em { color:var(--gold); font-style:normal; }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+/* ═══════════════════════════════════════════
+   SUNNAH
+═══════════════════════════════════════════ */
+.sunnah-controls { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes wave {
-    0%, 100% { height: 4px; }
-    50% { height: 14px; }
-  }
+.cat-pills { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+.pill {
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text-dim); font-size:13px; padding:5px 14px;
+  border-radius:20px; cursor:pointer; transition:all 0.2s;
+  font-family:'Crimson Pro', serif; box-shadow:var(--card-shadow);
+}
+.pill:hover, .pill.active { background:var(--gold); color:#fff; border-color:var(--gold); }
 
-  @media (max-width: 640px) {
-    header { padding: 12px 14px; }
-    main { padding: 16px 12px 120px; }
-    .quran-controls { flex-direction: column; align-items: stretch; }
-    .verse-arabic { font-size: 22px; }
-    nav button { padding: 7px 10px; font-size: 13px; }
-    .global-search { display: none; }
-    #audio-bar { padding: 10px 14px; gap: 10px; }
-    #audio-progress { max-width: 80px; }
-  }
+/* Chapter browser */
+.chapter-browser {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:16px; margin-bottom:18px;
+  box-shadow:var(--card-shadow);
+}
+.chapter-browser-title {
+  font-size:13px; color:var(--text-faint); letter-spacing:0.08em;
+  text-transform:uppercase; margin-bottom:12px;
+}
+.book-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.book-tab {
+  font-size:13px; padding:6px 14px; border-radius:8px;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--text-dim); cursor:pointer; transition:all 0.2s;
+  font-family:'Crimson Pro', serif;
+}
+.book-tab:hover { border-color:var(--gold); color:var(--gold); }
+.book-tab.active { background:var(--gold); color:#fff; border-color:var(--gold); }
+.chapter-list {
+  display:flex; gap:6px; flex-wrap:wrap; max-height:120px;
+  overflow-y:auto; padding-right:4px;
+}
+.chapter-chip {
+  font-size:12px; padding:4px 10px; border-radius:6px;
+  border:1px solid var(--border); background:var(--surface);
+  color:var(--text-dim); cursor:pointer; transition:all 0.2s;
+}
+.chapter-chip:hover, .chapter-chip.active { background:var(--teal); color:#fff; border-color:var(--teal); }
+
+.hadith-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:22px; margin-bottom:10px;
+  transition:border-color 0.2s; box-shadow:var(--card-shadow);
+}
+.hadith-card:hover { border-color:var(--gold-dim); }
+.hadith-arabic {
+  font-family:'Scheherazade New', serif; font-size:calc(var(--base-font,17px)+5px);
+  direction:rtl; text-align:right; color:var(--accent); line-height:2;
+  margin-bottom:14px; border-right:3px solid var(--gold-dim); padding-right:14px;
+}
+.hadith-text { font-size:var(--base-font,17px); line-height:1.8; color:var(--text); margin-bottom:12px; }
+.hadith-meta { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.hadith-source { font-size:13px; color:var(--gold-dim); letter-spacing:0.05em; }
+.hadith-grade {
+  font-size:12px; padding:2px 8px; border-radius:4px;
+  background:rgba(192,57,43,0.1); color:#c0392b; border:1px solid rgba(192,57,43,0.25);
+}
+.hadith-grade.sahih { background:rgba(42,157,110,0.1); color:var(--green); border-color:rgba(42,157,110,0.3); }
+.hadith-grade.hasan { background:rgba(42,124,111,0.1); color:var(--teal); border-color:rgba(42,124,111,0.3); }
+
+/* ═══════════════════════════════════════════
+   BOOKMARKS
+═══════════════════════════════════════════ */
+.bm-verse-card {
+  background:var(--surface); border:1px solid var(--gold-dim);
+  border-left:3px solid var(--gold); border-radius:var(--radius);
+  padding:18px 20px; margin-bottom:10px; cursor:pointer;
+  transition:all 0.2s; box-shadow:var(--card-shadow); position:relative;
+}
+.bm-verse-card:hover { box-shadow:0 4px 20px rgba(42,124,111,0.15); }
+.bm-ref { font-size:12px; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:8px; }
+.bm-arabic {
+  font-family:'Scheherazade New', serif; font-size:22px;
+  direction:rtl; text-align:right; color:var(--accent); line-height:1.9; margin-bottom:8px;
+}
+.bm-translation { color:var(--text-dim); font-size:15px; line-height:1.6; font-style:italic; }
+.bm-remove {
+  position:absolute; top:14px; right:14px; background:none; border:none;
+  color:var(--text-faint); cursor:pointer; font-size:15px; transition:color 0.2s;
+}
+.bm-remove:hover { color:#c0392b; }
+
+/* ═══════════════════════════════════════════
+   COMMUNITY
+═══════════════════════════════════════════ */
+.community-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  margin-bottom:24px; flex-wrap:wrap; gap:12px;
+}
+.community-title {
+  font-family:'Cormorant Garamond', serif; font-size:26px; color:var(--gold);
+}
+.community-subtitle { font-size:14px; color:var(--text-faint); margin-top:4px; }
+
+/* Post composer */
+.composer {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px; margin-bottom:22px;
+  box-shadow:var(--card-shadow);
+}
+.composer-label { font-size:12px; color:var(--text-faint); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px; }
+.composer-name {
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; padding:9px 14px; font-family:'Crimson Pro', serif;
+  font-size:15px; color:var(--text); outline:none; margin-bottom:10px;
+  transition:border-color 0.2s;
+}
+.composer-name:focus { border-color:var(--gold); }
+.composer-name::placeholder { color:var(--text-faint); }
+.composer-cat {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; padding:9px 14px; font-family:'Crimson Pro', serif;
+  font-size:15px; color:var(--text); outline:none; margin-bottom:10px;
+  cursor:pointer; width:100%;
+}
+.composer-textarea {
+  width:100%; min-height:90px; background:var(--surface2);
+  border:1px solid var(--border); border-radius:8px;
+  padding:12px 14px; font-family:'Crimson Pro', serif;
+  font-size:var(--base-font,17px); color:var(--text);
+  resize:vertical; outline:none; margin-bottom:12px;
+  transition:border-color 0.2s; line-height:1.7;
+}
+.composer-textarea:focus { border-color:var(--gold); }
+.composer-textarea::placeholder { color:var(--text-faint); }
+.composer-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.char-count { font-size:12px; color:var(--text-faint); }
+
+/* Filters row */
+.community-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+
+/* Post card */
+.post-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px; margin-bottom:10px;
+  box-shadow:var(--card-shadow); transition:border-color 0.2s;
+}
+.post-card:hover { border-color:var(--gold-dim); }
+.post-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.post-avatar {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--gold); display:flex; align-items:center; justify-content:center;
+  font-size:15px; color:#fff; font-family:'Cormorant Garamond', serif;
+  flex-shrink:0; font-weight:600;
+}
+.post-meta { flex:1; }
+.post-author { font-size:15px; color:var(--text); font-weight:600; }
+.post-time { font-size:12px; color:var(--text-faint); }
+.post-cat-badge {
+  font-size:11px; padding:3px 10px; border-radius:12px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--text-dim); letter-spacing:0.05em;
+}
+.post-body {
+  font-size:var(--base-font,17px); line-height:1.75;
+  color:var(--text); margin-bottom:14px;
+}
+.post-verse-ref {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:4px 10px; font-size:13px;
+  color:var(--teal); margin-bottom:14px; cursor:pointer;
+  transition:border-color 0.2s;
+}
+.post-verse-ref:hover { border-color:var(--teal); }
+.post-actions { display:flex; align-items:center; gap:14px; }
+.like-btn {
+  display:flex; align-items:center; gap:5px;
+  background:none; border:1px solid var(--border);
+  border-radius:8px; padding:5px 12px; cursor:pointer;
+  font-family:'Crimson Pro', serif; font-size:14px;
+  color:var(--text-dim); transition:all 0.2s;
+}
+.like-btn:hover, .like-btn.liked { border-color:var(--gold); color:var(--gold); background:rgba(42,124,111,0.06); }
+body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rgba(201,168,76,0.08); }
+.post-replies { font-size:13px; color:var(--text-faint); }
+
+/* Reply section */
+.reply-section { display:none; margin-top:14px; border-top:1px solid var(--border); padding-top:14px; }
+.reply-section.open { display:block; }
+.reply-input-row { display:flex; gap:8px; margin-top:10px; }
+.reply-input {
+  flex:1; background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; padding:8px 12px; font-family:'Crimson Pro', serif;
+  font-size:15px; color:var(--text); outline:none; transition:border-color 0.2s;
+}
+.reply-input:focus { border-color:var(--gold); }
+.reply-input::placeholder { color:var(--text-faint); }
+.reply-submit {
+  background:var(--gold); border:none; color:#fff;
+  border-radius:8px; padding:8px 16px; cursor:pointer;
+  font-size:13px; transition:opacity 0.2s;
+}
+.reply-submit:hover { opacity:0.85; }
+.reply-card {
+  display:flex; gap:10px; padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.reply-card:last-child { border-bottom:none; }
+.reply-avatar {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--teal); display:flex; align-items:center; justify-content:center;
+  font-size:12px; color:#fff; flex-shrink:0; font-weight:600;
+}
+.reply-body { flex:1; }
+.reply-author { font-size:13px; font-weight:600; color:var(--text); }
+.reply-text { font-size:14px; color:var(--text-dim); margin-top:2px; line-height:1.6; }
+
+/* ═══════════════════════════════════════════
+   AUDIO BAR
+═══════════════════════════════════════════ */
+#audio-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--header-bg); backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);
+  padding:12px 28px; display:none; align-items:center;
+  gap:16px; z-index:300; box-shadow:0 -2px 16px rgba(0,0,0,0.08);
+}
+#audio-bar.visible { display:flex; }
+.audio-info { flex:1; min-width:0; }
+.audio-ref { font-size:11px; color:var(--gold-dim); letter-spacing:0.08em; }
+.audio-arabic-preview {
+  font-family:'Scheherazade New', serif; font-size:18px;
+  direction:rtl; color:var(--gold);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#audio-progress {
+  flex:1; max-width:220px; height:4px; background:var(--border);
+  border-radius:2px; cursor:pointer; position:relative; flex-shrink:0;
+}
+#audio-fill { height:100%; background:var(--gold); border-radius:2px; width:0%; transition:width 0.15s; }
+.audio-controls { display:flex; gap:6px; align-items:center; flex-shrink:0; }
+.audio-btn {
+  background:var(--surface); border:1px solid var(--border); color:var(--text-dim);
+  padding:7px 12px; border-radius:8px; cursor:pointer;
+  font-size:16px; transition:all 0.2s; box-shadow:var(--card-shadow);
+}
+.audio-btn:hover { border-color:var(--gold); color:var(--gold); }
+.audio-btn.primary { background:var(--gold); border-color:var(--gold); color:#fff; }
+
+/* ═══════════════════════════════════════════
+   EMPTY / UTILITY
+═══════════════════════════════════════════ */
+.empty { text-align:center; padding:60px; color:var(--text-faint); font-size:16px; }
+.empty .big { font-size:44px; margin-bottom:14px; opacity:0.3; }
+.row { display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }
+
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spin   { to{transform:rotate(360deg)} }
+@keyframes wave   { 0%,100%{height:4px} 50%{height:14px} }
+
+@media(max-width:640px) {
+  header { padding:10px 14px; }
+  .toolbar { padding:8px 14px; }
+  main { padding:16px 12px 130px; }
+  .quran-controls { flex-direction:column; align-items:stretch; }
+  .verse-arabic { font-size:calc(var(--base-font,17px)+7px) !important; }
+  nav button { padding:7px 10px; font-size:13px; }
+  .global-search { display:none; }
+  #audio-bar { padding:10px 14px; gap:10px; }
+  #audio-progress { max-width:80px; }
+}
 </style>
 </head>
-<body>
+<body class="theme-sea">
 <div id="app">
 
+<!-- ═══ HEADER ═══ -->
 <header>
-  <span class="logo" onclick="showSection('quran')">نور <span>NOOR</span></span>
-  <nav>
+  <span class="logo" onclick="showSection('quran')">
+    نور <span class="logo-sub">NOOR</span>
+  </span>
+  <nav id="main-nav">
     <button class="active" onclick="showSection('quran')">Quran</button>
     <button onclick="showSection('search')">Search</button>
     <button onclick="showSection('sunnah')">Sunnah</button>
-    <button onclick="showSection('bookmarks')">Bookmarks <span id="bm-count" style="font-size:11px;color:var(--gold-dim);display:none"></span></button>
+    <button onclick="showSection('bookmarks')">Saved <span id="bm-count" style="display:none;font-size:11px;color:var(--gold-dim)"></span></button>
+    <button onclick="showSection('community')">Community</button>
   </nav>
   <div class="header-right">
     <div class="global-search">
-      <span style="color:var(--text-faint);font-size:14px">⌕</span>
-      <input type="text" placeholder="Search Quran…" id="globalSearch" onkeydown="handleGlobalSearch(event)"/>
+      <span style="color:var(--text-faint);font-size:13px">⌕</span>
+      <input type="text" placeholder="Search Quran…" id="globalSearch" onkeydown="handleGlobalSearch(event)" aria-label="Search Quran"/>
     </div>
   </div>
 </header>
 
+<!-- ═══ TOOLBAR ═══ -->
+<div class="toolbar">
+  <div class="theme-btns" aria-label="Choose theme">
+    <button class="theme-btn t-sea active"   title="Sea Green"   onclick="setTheme('sea',this)"></button>
+    <button class="theme-btn t-dark"          title="Night"       onclick="setTheme('dark',this)"></button>
+    <button class="theme-btn t-parch"         title="Parchment"   onclick="setTheme('parchment',this)"></button>
+    <button class="theme-btn t-desert"        title="Desert Sand" onclick="setTheme('desert',this)"></button>
+  </div>
+  <div class="font-ctrl">
+    <label for="fontSlider">Text Size</label>
+    <input type="range" id="fontSlider" class="font-slider" min="14" max="24" value="17" step="1" oninput="setFontSize(this.value)"/>
+    <span class="font-size-label" id="fontSizeLabel">17</span>
+  </div>
+</div>
+
 <main>
 
-  <!-- ═══ QURAN ═══ -->
-  <div class="panel active" id="panel-quran">
-    <div class="quran-controls">
-      <div class="select-wrap">
-        <select id="surahSelect" onchange="loadSurah()">
-          <option value="">— Select Surah —</option>
-        </select>
-      </div>
-      <div class="select-wrap" style="max-width:210px;">
-        <select id="translationSelect" onchange="loadSurah()">
-          <option value="en.sahih">Saheeh International</option>
-          <option value="en.asad">Muhammad Asad</option>
-          <option value="en.pickthall">Pickthall</option>
-          <option value="en.yusufali">Yusuf Ali</option>
-          <option value="en.ahmedali">Ahmed Ali</option>
-        </select>
-      </div>
-      <div class="select-wrap" style="max-width:190px;">
-        <select id="reciterSelect">
-          <option value="ar.alafasy">Mishary Alafasy</option>
-          <option value="ar.abdulsamad">Abdul Samad</option>
-          <option value="ar.husary">Husary</option>
-          <option value="ar.minshawi">Minshawi</option>
-          <option value="ar.mahermuaiqly">Maher Al-Muaiqly</option>
-        </select>
-      </div>
-      <div class="view-toggle">
-        <button class="active" id="btn-verse" onclick="setView('verse')">Verse</button>
-        <button id="btn-ruku" onclick="setView('ruku')">Ruku</button>
-        <button id="btn-full" onclick="setView('full')">Full</button>
-      </div>
-    </div>
-
-    <div class="toggle-row">
-      <div class="toggle-chip" id="chip-translit" onclick="toggleFeature('translit')">
-        <span class="dot"></span> Transliteration
-      </div>
-      <div class="toggle-chip on" id="chip-trans" onclick="toggleFeature('trans')">
-        <span class="dot"></span> Translation
-      </div>
-      <div class="toggle-chip on" id="chip-tafsir" onclick="toggleFeature('tafsir')">
-        <span class="dot"></span> Tafsir (Ibn Kathir)
-      </div>
-    </div>
-
-    <div id="quran-content">
-      <div class="empty">
-        <div class="big">☽</div>
-        <div>Select a Surah to begin</div>
-        <div style="margin-top:8px;font-size:13px;color:var(--text-faint)">
-          Click any verse number to play audio · ☆ to bookmark · ↓ Tafsir for Ibn Kathir commentary
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SEARCH ═══ -->
-  <div class="panel" id="panel-search">
-    <div class="sunnah-controls">
-      <div class="search-bar">
-        <span style="color:var(--text-faint)">⌕</span>
-        <input type="text" id="quranSearchInput" placeholder="Search Quran by keyword…" onkeydown="if(event.key==='Enter')searchQuran()"/>
-      </div>
-      <button class="action-btn" onclick="searchQuran()">Search</button>
-    </div>
-    <div id="quran-search-results">
-      <div class="empty"><div class="big">☆</div><div>Enter a keyword to search all 6,236 verses</div></div>
-    </div>
-  </div>
-
-  <!-- ═══ SUNNAH ═══ -->
-  <div class="panel" id="panel-sunnah">
-    <div class="sunnah-controls">
-      <div class="search-bar">
-        <span style="color:var(--text-faint)">⌕</span>
-        <input type="text" id="hadithSearch" placeholder="Search by keyword, topic, or source…" onkeydown="if(event.key==='Enter')searchHadith()"/>
-      </div>
-      <button class="action-btn" onclick="searchHadith()">Search</button>
-    </div>
-    <div class="book-row">
-      <label>Load from API:</label>
-      <select id="bookSelect">
-        <option value="">— Select Book —</option>
-        <option value="bukhari">Sahih al-Bukhari</option>
-        <option value="muslim">Sahih Muslim</option>
-        <option value="abudawud">Sunan Abu Dawud</option>
-        <option value="tirmidhi">Jami at-Tirmidhi</option>
-        <option value="ibnmajah">Sunan Ibn Majah</option>
-        <option value="nasai">Sunan an-Nasai</option>
+<!-- ═══════════════════════════════════
+     QURAN
+═══════════════════════════════════ -->
+<div class="panel active" id="panel-quran">
+  <div class="quran-controls">
+    <div class="sel-wrap">
+      <select id="surahSelect" onchange="loadSurah()" aria-label="Select Surah">
+        <option value="">— Select Surah —</option>
       </select>
-      <select id="chapterSelect"><option value="1">Chapter 1</option></select>
-      <button class="action-btn" onclick="loadHadithsFromAPI()">Load</button>
-      <span style="color:var(--text-faint);font-size:12px">or browse curated ↓</span>
     </div>
-    <div class="cat-pills" id="cat-pills">
-      <button class="pill active" onclick="filterHadith('',this)">All</button>
-      <button class="pill" onclick="filterHadith('prayer',this)">Prayer</button>
-      <button class="pill" onclick="filterHadith('fasting',this)">Fasting</button>
-      <button class="pill" onclick="filterHadith('charity',this)">Charity</button>
-      <button class="pill" onclick="filterHadith('marriage',this)">Marriage</button>
-      <button class="pill" onclick="filterHadith('knowledge',this)">Knowledge</button>
-      <button class="pill" onclick="filterHadith('manners',this)">Manners</button>
-      <button class="pill" onclick="filterHadith('dhikr',this)">Dhikr</button>
-      <button class="pill" onclick="filterHadith('death',this)">Death &amp; Akhirah</button>
-      <button class="pill" onclick="filterHadith('paradise',this)">Paradise</button>
-      <button class="pill" onclick="filterHadith('purification',this)">Purification</button>
-      <button class="pill" onclick="filterHadith('trade',this)">Trade &amp; Wealth</button>
+    <div class="sel-wrap" style="max-width:210px;">
+      <select id="translationSelect" onchange="loadSurah()" aria-label="Select translation">
+        <option value="en.sahih">Saheeh International</option>
+        <option value="en.asad">Muhammad Asad</option>
+        <option value="en.pickthall">Pickthall</option>
+        <option value="en.yusufali">Yusuf Ali</option>
+        <option value="en.ahmedali">Ahmed Ali</option>
+      </select>
     </div>
-    <div id="sunnah-content"><div class="loader"><div class="spinner"></div>Loading hadiths…</div></div>
+    <div class="sel-wrap" style="max-width:185px;">
+      <select id="reciterSelect" aria-label="Select reciter">
+        <option value="ar.alafasy">Mishary Alafasy</option>
+        <option value="ar.abdulsamad">Abdul Samad</option>
+        <option value="ar.husary">Husary</option>
+        <option value="ar.minshawi">Minshawi</option>
+        <option value="ar.mahermuaiqly">Maher Al-Muaiqly</option>
+      </select>
+    </div>
+    <div class="view-toggle">
+      <button class="active" id="btn-verse" onclick="setView('verse')">Verse</button>
+      <button id="btn-ruku"  onclick="setView('ruku')">Ruku</button>
+      <button id="btn-full"  onclick="setView('full')">Full</button>
+    </div>
+  </div>
+  <div class="toggle-row">
+    <div class="chip"    id="chip-translit" onclick="toggleFeat('translit')"><span class="dot"></span> Transliteration</div>
+    <div class="chip on" id="chip-trans"    onclick="toggleFeat('trans')"   ><span class="dot"></span> Translation</div>
+    <div class="chip on" id="chip-tafsir"   onclick="toggleFeat('tafsir')"  ><span class="dot"></span> Tafsir</div>
+  </div>
+  <div id="quran-content">
+    <div class="empty">
+      <div class="big">☽</div>
+      <div>Select a Surah to begin</div>
+      <div style="margin-top:8px;font-size:13px;color:var(--text-faint)">Tap verse number to play · ☆ to bookmark · Tafsir toggle per verse</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SEARCH
+═══════════════════════════════════ -->
+<div class="panel" id="panel-search">
+  <div class="row">
+    <div class="search-bar">
+      <span style="color:var(--text-faint)">⌕</span>
+      <input type="text" id="quranSearchInput" placeholder="Search Quran by keyword…" onkeydown="if(event.key==='Enter')searchQuran()" aria-label="Search Quran"/>
+    </div>
+    <button class="action-btn" onclick="searchQuran()">Search</button>
+  </div>
+  <div id="quran-search-results">
+    <div class="empty"><div class="big">☆</div><div>Enter a keyword to search all 6,236 verses</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SUNNAH
+═══════════════════════════════════ -->
+<div class="panel" id="panel-sunnah">
+  <div class="sunnah-controls">
+    <div class="search-bar">
+      <span style="color:var(--text-faint)">⌕</span>
+      <input type="text" id="hadithSearch" placeholder="Search hadiths…" onkeydown="if(event.key==='Enter')searchHadith()" aria-label="Search hadiths"/>
+    </div>
+    <button class="action-btn" onclick="searchHadith()">Search</button>
   </div>
 
-  <!-- ═══ BOOKMARKS ═══ -->
-  <div class="panel" id="panel-bookmarks">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
-      <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);">Saved Verses</div>
-        <div style="font-size:14px;color:var(--text-faint);margin-top:4px;">Your personal collection · persists across sessions</div>
-      </div>
-      <button class="action-btn" onclick="clearAllBookmarks()" style="font-size:13px;padding:6px 14px;opacity:0.7;">Clear All</button>
+  <!-- Chapter browser -->
+  <div class="chapter-browser">
+    <div class="chapter-browser-title">Browse by Book &amp; Chapter</div>
+    <div class="book-tabs" id="bookTabs">
+      <button class="book-tab active" onclick="selectBook('bukhari',this)">Bukhari</button>
+      <button class="book-tab" onclick="selectBook('muslim',this)">Muslim</button>
+      <button class="book-tab" onclick="selectBook('abudawud',this)">Abu Dawud</button>
+      <button class="book-tab" onclick="selectBook('tirmidhi',this)">Tirmidhi</button>
+      <button class="book-tab" onclick="selectBook('ibnmajah',this)">Ibn Majah</button>
+      <button class="book-tab" onclick="selectBook('nasai',this)">Nasai</button>
     </div>
-    <div id="bookmarks-content">
-      <div class="bm-empty"><div class="big">🔖</div><div>No bookmarks yet</div><div style="font-size:13px;color:var(--text-faint);margin-top:6px">Tap ☆ on any verse to save it here</div></div>
+    <div class="chapter-list" id="chapterList"></div>
+  </div>
+
+  <div class="cat-pills" id="cat-pills">
+    <button class="pill active" onclick="filterHadith('',this)">All</button>
+    <button class="pill" onclick="filterHadith('prayer',this)">Prayer</button>
+    <button class="pill" onclick="filterHadith('fasting',this)">Fasting</button>
+    <button class="pill" onclick="filterHadith('charity',this)">Charity</button>
+    <button class="pill" onclick="filterHadith('marriage',this)">Marriage</button>
+    <button class="pill" onclick="filterHadith('knowledge',this)">Knowledge</button>
+    <button class="pill" onclick="filterHadith('manners',this)">Manners</button>
+    <button class="pill" onclick="filterHadith('dhikr',this)">Dhikr</button>
+    <button class="pill" onclick="filterHadith('death',this)">Death &amp; Akhirah</button>
+    <button class="pill" onclick="filterHadith('paradise',this)">Paradise</button>
+    <button class="pill" onclick="filterHadith('purification',this)">Purification</button>
+    <button class="pill" onclick="filterHadith('trade',this)">Trade &amp; Wealth</button>
+  </div>
+  <div id="sunnah-content"><div class="loader"><div class="spinner"></div>Loading hadiths…</div></div>
+</div>
+
+<!-- ═══════════════════════════════════
+     BOOKMARKS
+═══════════════════════════════════ -->
+<div class="panel" id="panel-bookmarks">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold)">Saved Verses</div>
+      <div style="font-size:13px;color:var(--text-faint);margin-top:4px">Persists across sessions</div>
+    </div>
+    <button class="action-btn" style="background:var(--surface);color:var(--text-dim);border:1px solid var(--border);font-size:13px;padding:8px 16px" onclick="clearAllBookmarks()">Clear All</button>
+  </div>
+  <div id="bookmarks-content"></div>
+</div>
+
+<!-- ═══════════════════════════════════
+     COMMUNITY
+═══════════════════════════════════ -->
+<div class="panel" id="panel-community">
+  <div class="community-header">
+    <div>
+      <div class="community-title">Community</div>
+      <div class="community-subtitle">Ask questions, share reflections · Anonymous · Google login coming soon</div>
     </div>
   </div>
+
+  <!-- Composer -->
+  <div class="composer">
+    <div class="composer-label">Share a question or reflection</div>
+    <input type="text" class="composer-name" id="postAuthor" placeholder="Your name (or leave blank for Anonymous)" aria-label="Your name"/>
+    <select class="composer-cat" id="postCategory" aria-label="Category">
+      <option value="question">❓ Question</option>
+      <option value="reflection">🌙 Reflection</option>
+      <option value="tafsir">📖 Tafsir Discussion</option>
+      <option value="sunnah">📿 Sunnah</option>
+      <option value="general">💬 General</option>
+    </select>
+    <textarea class="composer-textarea" id="postBody" placeholder="What's on your mind? Reference a verse, ask about a hadith, or share a reflection…" maxlength="1000" oninput="updateCharCount()"></textarea>
+    <div class="composer-footer">
+      <span class="char-count"><span id="charCount">0</span>/1000</span>
+      <button class="action-btn" onclick="submitPost()">Post</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="community-filters">
+    <button class="pill active" onclick="filterPosts('all',this)">All</button>
+    <button class="pill" onclick="filterPosts('question',this)">Questions</button>
+    <button class="pill" onclick="filterPosts('reflection',this)">Reflections</button>
+    <button class="pill" onclick="filterPosts('tafsir',this)">Tafsir</button>
+    <button class="pill" onclick="filterPosts('sunnah',this)">Sunnah</button>
+    <button class="pill" onclick="filterPosts('general',this)">General</button>
+  </div>
+
+  <div id="community-feed"></div>
+</div>
 
 </main>
 
-<!-- AUDIO BAR -->
+<!-- ═══ AUDIO BAR ═══ -->
 <div id="audio-bar">
   <div class="audio-info">
-    <div class="ref" id="audio-ref">—</div>
-    <div class="arabic-preview" id="audio-arabic">—</div>
+    <div class="audio-ref" id="audio-ref">—</div>
+    <div class="audio-arabic-preview" id="audio-arabic">—</div>
   </div>
   <div id="audio-progress" onclick="seekAudio(event)"><div id="audio-fill"></div></div>
   <div class="audio-controls">
-    <button class="audio-btn" onclick="prevVerse()" title="Previous">⏮</button>
+    <button class="audio-btn" onclick="prevVerse()">⏮</button>
     <button class="audio-btn primary" id="play-pause-btn" onclick="togglePlay()">⏸</button>
-    <button class="audio-btn" onclick="nextVerse()" title="Next">⏭</button>
-    <button class="audio-btn" onclick="closeAudio()" style="font-size:12px;padding:7px 10px;">✕</button>
+    <button class="audio-btn" onclick="nextVerse()">⏭</button>
+    <button class="audio-btn" onclick="closeAudio()" style="font-size:12px;padding:7px 9px">✕</button>
   </div>
 </div>
 
 <audio id="main-audio" onended="nextVerse()" ontimeupdate="updateProgress()"></audio>
 
-</div>
+</div><!-- #app -->
 
 <script>
-// ─────────────────────────────────────────────
-//  CONFIG
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════════
 const API       = 'https://api.alquran.cloud/v1';
-const AUDIO_CDN = 'https://cdn.islamic.network/quran/audio/128';
 const QURAN_COM = 'https://api.quran.com/api/v4';
 const HADITH_API= 'https://api.ahadith.co';
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  STATE
-// ─────────────────────────────────────────────
-const state = {
-  currentSurah: null,
-  verses: [],
-  translation: [],
-  transliteration: [],
-  view: 'verse',
-  currentVerseIdx: null,
-  currentRuku: 1,
-  rukus: [],
-  hadithData: [],
-  features: { translit: false, trans: true, tafsir: true },
-  openTafsirs: {},
-  bookmarks: {},
+// ═══════════════════════════════════════════════════════
+const S = {
+  currentSurah: null, verses:[], translation:[], transliteration:[],
+  view:'verse', currentVerseIdx:null, currentRuku:1, rukus:[],
+  hadithData:[], hadithCategory:'', hadithKeyword:'',
+  features:{ translit:false, trans:true, tafsir:true },
+  openTafsirs:{}, tafsirSources:{},  // { idx: { 'ibnkathir': text, 'jalalayn': text } }
+  bookmarks:{},
+  posts:[], postFilter:'all',
+  currentBook:'bukhari', currentChapter:null,
 };
 
-// ─────────────────────────────────────────────
-//  BOOKMARKS
-// ─────────────────────────────────────────────
-function loadBookmarks() {
+// Tafsir IDs on quran.com
+const TAFSIR_IDS = {
+  'Ibn Kathir':       169,
+  'Al-Jalalayn':      74,
+  'Maariful Quran':   168,
+};
+
+// ═══════════════════════════════════════════════════════
+//  THEME + FONT
+// ═══════════════════════════════════════════════════════
+function setTheme(name, btn) {
+  document.body.className = document.body.className.replace(/theme-\S+/,'');
+  document.body.classList.add('theme-'+name);
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  try { localStorage.setItem('noor_theme', name); } catch(e){}
+}
+
+function setFontSize(val) {
+  document.documentElement.style.setProperty('--base-font', val+'px');
+  document.getElementById('fontSizeLabel').textContent = val;
+  try { localStorage.setItem('noor_fontsize', val); } catch(e){}
+}
+
+function loadPrefs() {
   try {
-    const raw = localStorage.getItem('noor_bookmarks_v2');
-    if (raw) Object.assign(state.bookmarks, JSON.parse(raw));
-  } catch(e) {}
-  updateBmCount();
+    const theme = localStorage.getItem('noor_theme') || 'sea';
+    const btn = document.querySelector(`.t-${theme === 'parchment' ? 'parch' : theme}`);
+    if (btn) setTheme(theme, btn);
+    const fs = localStorage.getItem('noor_fontsize') || '17';
+    const slider = document.getElementById('fontSlider');
+    slider.value = fs;
+    setFontSize(fs);
+  } catch(e){}
 }
 
-function saveBookmarks() {
-  try { localStorage.setItem('noor_bookmarks_v2', JSON.stringify(state.bookmarks)); } catch(e) {}
-  updateBmCount();
-}
-
-function toggleBookmark(idx) {
-  if (!state.currentSurah) return;
-  const v = state.verses[idx];
-  const t = state.translation[idx];
-  const key = `${state.currentSurah.number}:${v.numberInSurah}`;
-
-  if (state.bookmarks[key]) {
-    delete state.bookmarks[key];
-  } else {
-    state.bookmarks[key] = {
-      surahNum: state.currentSurah.number,
-      surahName: state.currentSurah.englishName,
-      verseNum: v.numberInSurah,
-      arabic: v.text,
-      translation: t ? t.text : '',
-    };
-  }
-  saveBookmarks();
-
-  const bm = !!state.bookmarks[key];
-  const card = document.getElementById('vc-'+idx);
-  const btn  = card ? card.querySelector('.bm-btn') : null;
-  if (card) card.classList.toggle('bookmarked', bm);
-  if (btn)  { btn.textContent = bm ? '★' : '☆'; btn.classList.toggle('active', bm); }
-}
-
-function isBookmarked(surahNum, verseNum) {
-  return !!state.bookmarks[`${surahNum}:${verseNum}`];
-}
-
-function updateBmCount() {
-  const count = Object.keys(state.bookmarks).length;
-  const el = document.getElementById('bm-count');
-  el.textContent = count > 0 ? `(${count})` : '';
-  el.style.display = count > 0 ? 'inline' : 'none';
-}
-
-function renderBookmarks() {
-  const out  = document.getElementById('bookmarks-content');
-  const keys = Object.keys(state.bookmarks);
-  if (!keys.length) {
-    out.innerHTML = '<div class="bm-empty"><div class="big">🔖</div><div>No bookmarks yet</div><div style="font-size:13px;color:var(--text-faint);margin-top:6px">Tap ☆ on any verse to save it here</div></div>';
-    return;
-  }
-  out.innerHTML = keys.map(k => {
-    const bm = state.bookmarks[k];
-    return `
-      <div class="bm-verse-card" onclick="goToVerse(${bm.surahNum},${bm.verseNum})">
-        <button class="bm-remove" onclick="event.stopPropagation();removeBookmark('${k}')" title="Remove">✕</button>
-        <div class="bm-ref">${bm.surahName} · ${bm.surahNum}:${bm.verseNum}</div>
-        <div class="bm-arabic">${bm.arabic}</div>
-        <div class="bm-translation">${bm.translation}</div>
-      </div>`;
-  }).join('');
-}
-
-function removeBookmark(key) {
-  delete state.bookmarks[key];
-  saveBookmarks();
-  renderBookmarks();
-}
-
-function clearAllBookmarks() {
-  if (!Object.keys(state.bookmarks).length) return;
-  if (confirm('Clear all bookmarks?')) {
-    state.bookmarks = {};
-    saveBookmarks();
-    renderBookmarks();
-  }
-}
-
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  NAV
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+const SECTIONS = ['quran','search','sunnah','bookmarks','community'];
+
 function showSection(name) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
-  ['quran','search','sunnah','bookmarks'].forEach((n,i) => {
-    document.querySelectorAll('nav button')[i].classList.toggle('active', n === name);
+  document.querySelectorAll('#main-nav button').forEach((b,i) => {
+    b.classList.toggle('active', SECTIONS[i] === name);
   });
-  if (name === 'sunnah' && state.hadithData.length === 0) loadHadiths();
+  if (name === 'sunnah' && S.hadithData.length === 0) { loadHadiths(); buildChapterList('bukhari'); }
   if (name === 'bookmarks') renderBookmarks();
+  if (name === 'community') renderFeed();
 }
 
 function handleGlobalSearch(e) {
@@ -747,41 +989,30 @@ function handleGlobalSearch(e) {
   searchQuran();
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  FEATURE TOGGLES
-// ─────────────────────────────────────────────
-function toggleFeature(feat) {
-  state.features[feat] = !state.features[feat];
-  const chip = document.getElementById('chip-'+feat);
-  chip.classList.toggle('on', state.features[feat]);
-
+// ═══════════════════════════════════════════════════════
+function toggleFeat(feat) {
+  S.features[feat] = !S.features[feat];
+  document.getElementById('chip-'+feat).classList.toggle('on', S.features[feat]);
   if (feat === 'translit') {
-    document.querySelectorAll('.verse-transliteration').forEach(el => {
-      el.style.display = state.features.translit ? 'block' : 'none';
-    });
-    if (state.features.translit && state.transliteration.length === 0 && state.currentSurah) {
-      loadTransliteration();
-    }
+    document.querySelectorAll('.verse-transliteration').forEach(el => el.style.display = S.features.translit ? 'block' : 'none');
+    if (S.features.translit && S.transliteration.length === 0 && S.currentSurah) loadTransliteration();
   }
   if (feat === 'trans') {
-    document.querySelectorAll('.verse-translation').forEach(el => {
-      el.style.display = state.features.trans ? 'block' : 'none';
-    });
+    document.querySelectorAll('.verse-translation').forEach(el => el.style.display = S.features.trans ? 'block' : 'none');
   }
   if (feat === 'tafsir') {
-    document.querySelectorAll('.tafsir-btn').forEach(el => {
-      el.style.display = state.features.tafsir ? 'inline-block' : 'none';
-    });
+    document.querySelectorAll('.tafsir-btn').forEach(el => el.style.display = S.features.tafsir ? 'inline-block' : 'none');
   }
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  SURAH LIST
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 async function loadSurahList() {
   try {
-    const r = await fetch(`${API}/surah`);
-    const d = await r.json();
+    const d = await (await fetch(`${API}/surah`)).json();
     const sel = document.getElementById('surahSelect');
     d.data.forEach(s => {
       const o = document.createElement('option');
@@ -789,472 +1020,636 @@ async function loadSurahList() {
       o.textContent = `${s.number}. ${s.englishName} — ${s.name}`;
       sel.appendChild(o);
     });
-  } catch(e) { console.error(e); }
+  } catch(e) {}
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  LOAD SURAH
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 async function loadSurah() {
   const num = document.getElementById('surahSelect').value;
   if (!num) return;
   const trans = document.getElementById('translationSelect').value;
-  const content = document.getElementById('quran-content');
-  content.innerHTML = '<div class="loader"><div class="spinner"></div>Loading…</div>';
-  state.transliteration = [];
-  state.openTafsirs = {};
+  document.getElementById('quran-content').innerHTML = '<div class="loader"><div class="spinner"></div>Loading…</div>';
+  S.transliteration = []; S.openTafsirs = {}; S.tafsirSources = {};
 
   try {
-    const [arRes, trRes] = await Promise.all([
-      fetch(`${API}/surah/${num}`),
-      fetch(`${API}/surah/${num}/${trans}`)
+    const [ar, tr] = await Promise.all([
+      fetch(`${API}/surah/${num}`).then(r=>r.json()),
+      fetch(`${API}/surah/${num}/${trans}`).then(r=>r.json()),
     ]);
-    const arData = await arRes.json();
-    const trData = await trRes.json();
-
-    state.currentSurah = arData.data;
-    state.verses       = arData.data.ayahs;
-    state.translation  = trData.data.ayahs;
-    state.currentVerseIdx = null;
-
-    // Parse rukus
-    state.rukus = [];
-    let lastRuku = -1;
-    state.verses.forEach((v,i) => {
-      if (v.ruku !== lastRuku) { lastRuku = v.ruku; state.rukus.push({ ruku: v.ruku, startIdx: i }); }
-    });
-
+    S.currentSurah = ar.data; S.verses = ar.data.ayahs; S.translation = tr.data.ayahs;
+    S.currentVerseIdx = null;
+    S.rukus = [];
+    let lastR = -1;
+    S.verses.forEach((v,i) => { if(v.ruku!==lastR){ lastR=v.ruku; S.rukus.push({ruku:v.ruku,startIdx:i}); }});
     renderSurah();
-    if (state.features.translit) loadTransliteration();
-
+    if (S.features.translit) loadTransliteration();
   } catch(e) {
-    content.innerHTML = '<div class="empty"><div class="big">⚠</div><div>Failed to load. Check your connection.</div></div>';
+    document.getElementById('quran-content').innerHTML = '<div class="empty"><div class="big">⚠</div><div>Failed to load. Check connection.</div></div>';
   }
 }
 
 async function loadTransliteration() {
-  if (!state.currentSurah) return;
+  if (!S.currentSurah) return;
   try {
-    const r = await fetch(`${API}/surah/${state.currentSurah.number}/en.transliteration`);
-    const d = await r.json();
-    state.transliteration = d.data.ayahs;
-    document.querySelectorAll('.verse-transliteration').forEach((el, i) => {
-      if (state.transliteration[i]) {
-        el.textContent = state.transliteration[i].text;
-        el.style.display = state.features.translit ? 'block' : 'none';
-      }
+    const d = await (await fetch(`${API}/surah/${S.currentSurah.number}/en.transliteration`)).json();
+    S.transliteration = d.data.ayahs;
+    document.querySelectorAll('.verse-transliteration').forEach((el,i) => {
+      if (S.transliteration[i]) { el.textContent = S.transliteration[i].text; el.style.display = S.features.translit?'block':'none'; }
     });
-  } catch(e) { /* transliteration is optional */ }
+  } catch(e) {}
 }
 
 function setView(v) {
-  state.view = v;
-  ['verse','ruku','full'].forEach(k => document.getElementById('btn-'+k).classList.toggle('active', k===v));
-  if (state.currentSurah) renderSurah();
+  S.view = v;
+  ['verse','ruku','full'].forEach(k => document.getElementById('btn-'+k).classList.toggle('active',k===v));
+  if (S.currentSurah) renderSurah();
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  RENDER SURAH
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 function renderSurah() {
-  const s = state.currentSurah;
-  let html = `
-    <div class="surah-header">
-      <div class="surah-name-ar">${s.name}</div>
-      <div class="surah-name-en">${s.englishName}</div>
-      <div class="surah-meta">${s.englishNameTranslation} · ${s.numberOfAyahs} Verses · ${s.revelationType}</div>
-      ${s.number !== 9 ? '<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>' : ''}
-    </div>`;
+  const s = S.currentSurah;
+  let html = `<div class="surah-header">
+    <div class="surah-name-ar">${s.name}</div>
+    <div class="surah-name-en">${s.englishName}</div>
+    <div class="surah-meta">${s.englishNameTranslation} · ${s.numberOfAyahs} Verses · ${s.revelationType}</div>
+    ${s.number!==9?'<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>':''}
+  </div>`;
 
-  if (state.view === 'ruku') {
+  if (S.view==='ruku') {
     html += renderRukuNav();
-    const ruku = state.rukus.find(r => r.ruku === state.currentRuku) || state.rukus[0];
+    const ruku = S.rukus.find(r=>r.ruku===S.currentRuku)||S.rukus[0];
     if (ruku) {
-      const ni = state.rukus.findIndex(r => r.ruku === ruku.ruku);
-      const end = state.rukus[ni+1] ? state.rukus[ni+1].startIdx : state.verses.length;
-      state.verses.slice(ruku.startIdx, end).forEach((v,i) => {
-        html += renderVerse(v, state.translation[ruku.startIdx+i], state.transliteration[ruku.startIdx+i], ruku.startIdx+i);
-      });
+      const ni = S.rukus.findIndex(r=>r.ruku===ruku.ruku);
+      const end = S.rukus[ni+1]?S.rukus[ni+1].startIdx:S.verses.length;
+      S.verses.slice(ruku.startIdx,end).forEach((v,i)=>{ html+=renderVerse(v,S.translation[ruku.startIdx+i],S.transliteration[ruku.startIdx+i],ruku.startIdx+i); });
     }
   } else {
-    state.verses.forEach((v,i) => html += renderVerse(v, state.translation[i], state.transliteration[i], i));
+    S.verses.forEach((v,i)=>{ html+=renderVerse(v,S.translation[i],S.transliteration[i],i); });
   }
-
   document.getElementById('quran-content').innerHTML = html;
 }
 
 function renderRukuNav() {
-  return '<div class="ruku-nav">' +
-    state.rukus.map(r => `<button class="ruku-btn ${r.ruku===state.currentRuku?'active':''}" onclick="selectRuku(${r.ruku})">Ruku ${r.ruku}</button>`).join('') +
-  '</div>';
+  return '<div class="ruku-nav">'+S.rukus.map(r=>`<button class="ruku-btn ${r.ruku===S.currentRuku?'active':''}" onclick="selectRuku(${r.ruku})">Ruku ${r.ruku}</button>`).join('')+'</div>';
+}
+function selectRuku(n){ S.currentRuku=n; renderSurah(); }
+
+function renderVerse(v,t,tl,idx) {
+  const playing = S.currentVerseIdx===idx;
+  const rs = S.rukus.some(r=>r.startIdx===idx)&&idx>0;
+  const bm = isBookmarked(S.currentSurah.number,v.numberInSurah);
+  const tafsirOpen = S.openTafsirs[idx]!==undefined;
+  const transName = document.getElementById('translationSelect').selectedOptions[0].text;
+
+  return `<div class="verse-card ${playing?'playing':''} ${rs?'ruku-start':''} ${bm?'bookmarked':''}" id="vc-${idx}">
+    <div class="verse-top">
+      <div class="verse-actions">
+        <div class="verse-number ${playing?'playing':''}" onclick="playVerse(${idx})" title="Play">
+          <span class="num-text">${v.numberInSurah}</span>
+          <span class="play-icon">▶</span>
+        </div>
+        <button class="bm-btn ${bm?'active':''}" onclick="toggleBookmark(${idx})" title="Bookmark">${bm?'★':'☆'}</button>
+      </div>
+      <div class="verse-arabic" onclick="playVerse(${idx})">${v.text}</div>
+    </div>
+    <div class="verse-transliteration" style="display:${S.features.translit?'block':'none'}">${tl?tl.text:''}</div>
+    <div class="verse-translation" style="display:${S.features.trans?'block':'none'}">
+      <div class="translator">${transName}</div>${t?t.text:''}
+    </div>
+    <div class="verse-footer">
+      ${rs?`<span class="ruku-tag">Ruku ${v.ruku}</span>`:''}
+      <button class="tafsir-btn" style="display:${S.features.tafsir?'inline-block':'none'}"
+        onclick="toggleTafsir(${idx},${S.currentSurah.number},${v.numberInSurah})">
+        ${tafsirOpen?'↑ Tafsir':'↓ Tafsir'}
+      </button>
+      <div class="audio-wave"><span style="height:4px"></span><span style="height:8px"></span><span style="height:12px"></span><span style="height:6px"></span></div>
+    </div>
+    <div class="tafsir-panel ${tafsirOpen?'open':''}" id="tafsir-${idx}">
+      <div class="tafsir-source-tabs" id="tafsir-tabs-${idx}">
+        ${Object.keys(TAFSIR_IDS).map((name,i)=>`<button class="tafsir-tab ${i===0?'active':''}" onclick="switchTafsirSource(${idx},${S.currentSurah.number},${v.numberInSurah},'${name}',this)">${name}</button>`).join('')}
+      </div>
+      <div class="tafsir-content-area" id="tafsir-body-${idx}"><span style="color:var(--text-faint);font-size:14px">Loading Ibn Kathir tafsir…</span></div>
+    </div>
+  </div>`;
 }
 
-function selectRuku(n) { state.currentRuku = n; renderSurah(); }
-
-function renderVerse(v, t, tl, idx) {
-  const playing   = state.currentVerseIdx === idx;
-  const rukuStart = state.rukus.some(r => r.startIdx === idx) && idx > 0;
-  const bm        = isBookmarked(state.currentSurah.number, v.numberInSurah);
-  const tafsirOpen= state.openTafsirs[idx] !== undefined;
-  const transName = document.getElementById('translationSelect').options[document.getElementById('translationSelect').selectedIndex].text;
-
-  return `
-    <div class="verse-card ${playing?'playing':''} ${rukuStart?'ruku-start':''} ${bm?'bookmarked':''}" id="vc-${idx}">
-      <div class="verse-top">
-        <div class="verse-actions">
-          <div class="verse-number ${playing?'playing':''}" onclick="playVerse(${idx})" title="Play audio">
-            <span class="num-text">${v.numberInSurah}</span>
-            <span class="play-icon">▶</span>
-          </div>
-          <button class="bm-btn ${bm?'active':''}" onclick="toggleBookmark(${idx})" title="${bm?'Remove bookmark':'Bookmark'}">
-            ${bm ? '★' : '☆'}
-          </button>
-        </div>
-        <div class="verse-arabic" onclick="playVerse(${idx})">${v.text}</div>
-      </div>
-      <div class="verse-transliteration" style="display:${state.features.translit?'block':'none'}">${tl?tl.text:''}</div>
-      <div class="verse-translation" style="display:${state.features.trans?'block':'none'}">
-        <div class="translator">${transName}</div>
-        ${t?t.text:''}
-      </div>
-      <div class="verse-footer">
-        ${rukuStart ? `<span class="ruku-tag">Ruku ${v.ruku}</span>` : ''}
-        <button class="tafsir-btn" style="display:${state.features.tafsir?'inline-block':'none'}"
-          onclick="toggleTafsir(${idx},${state.currentSurah.number},${v.numberInSurah})">
-          ${tafsirOpen ? '↑ Tafsir' : '↓ Tafsir'}
-        </button>
-        <div class="audio-wave">
-          <span style="height:4px"></span><span style="height:8px"></span>
-          <span style="height:12px"></span><span style="height:6px"></span>
-        </div>
-      </div>
-      <div class="tafsir-panel ${tafsirOpen?'open':''}" id="tafsir-${idx}">
-        <div class="tafsir-header">Ibn Kathir — Tafsir al-Quran al-Azim</div>
-        <div class="tafsir-text">${state.openTafsirs[idx] || '<span style="color:var(--text-faint);font-size:14px">Loading tafsir…</span>'}</div>
-      </div>
-    </div>`;
-}
-
-// ─────────────────────────────────────────────
-//  TAFSIR — IBN KATHIR
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  TAFSIR — MULTI SOURCE
+// ═══════════════════════════════════════════════════════
 async function toggleTafsir(idx, surahNum, verseNum) {
   const panel = document.getElementById(`tafsir-${idx}`);
   const btn   = document.querySelector(`#vc-${idx} .tafsir-btn`);
-
   if (panel.classList.contains('open')) {
     panel.classList.remove('open');
     if (btn) btn.textContent = '↓ Tafsir';
-    delete state.openTafsirs[idx];
+    delete S.openTafsirs[idx];
     return;
   }
-
   panel.classList.add('open');
   if (btn) btn.textContent = '↑ Tafsir';
-  if (state.openTafsirs[idx]) return;
+  S.openTafsirs[idx] = true;
+  // Load Ibn Kathir by default
+  if (!S.tafsirSources[idx]) S.tafsirSources[idx] = {};
+  if (!S.tafsirSources[idx]['Ibn Kathir']) {
+    await fetchTafsir(idx, surahNum, verseNum, 'Ibn Kathir');
+  } else {
+    document.getElementById(`tafsir-body-${idx}`).textContent = S.tafsirSources[idx]['Ibn Kathir'];
+  }
+}
 
-  panel.querySelector('.tafsir-text').innerHTML = '<span style="color:var(--text-faint);font-size:14px">Loading tafsir…</span>';
+async function switchTafsirSource(idx, surahNum, verseNum, sourceName, btn) {
+  document.querySelectorAll(`#tafsir-tabs-${idx} .tafsir-tab`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!S.tafsirSources[idx]) S.tafsirSources[idx] = {};
+  if (S.tafsirSources[idx][sourceName]) {
+    document.getElementById(`tafsir-body-${idx}`).textContent = S.tafsirSources[idx][sourceName];
+  } else {
+    await fetchTafsir(idx, surahNum, verseNum, sourceName);
+  }
+}
 
+async function fetchTafsir(idx, surahNum, verseNum, sourceName) {
+  const body = document.getElementById(`tafsir-body-${idx}`);
+  if (!body) return;
+  body.innerHTML = `<span style="color:var(--text-faint);font-size:14px">Loading ${sourceName}…</span>`;
+  const tafsirId = TAFSIR_IDS[sourceName];
   const verseKey = `${surahNum}:${verseNum}`;
   let text = '';
 
-  // Try quran.com API (tafsir 169 = Ibn Kathir English)
-  const endpoints = [
-    `${QURAN_COM}/tafsirs/169/by_ayah/${verseKey}?language=en`,
-    `https://qurancdn.com/api/qdc/tafsirs/169/by_ayah/${verseKey}`,
+  const urls = [
+    `${QURAN_COM}/tafsirs/${tafsirId}/by_ayah/${verseKey}?language=en`,
+    `https://qurancdn.com/api/qdc/tafsirs/${tafsirId}/by_ayah/${verseKey}`,
   ];
 
-  for (const url of endpoints) {
+  for (const url of urls) {
     try {
-      const r = await fetch(url);
-      const d = await r.json();
-      const raw = (d.tafsir && d.tafsir.text) || (d.data && d.data.text) || '';
+      const d = await (await fetch(url)).json();
+      const raw = (d.tafsir&&d.tafsir.text)||(d.data&&d.data.text)||'';
       if (raw) {
         const tmp = document.createElement('div');
         tmp.innerHTML = raw;
-        text = (tmp.textContent || tmp.innerText || '').trim();
-        // Clean up excess whitespace
-        text = text.replace(/\s{3,}/g, '\n\n').trim();
-        if (text.length > 1400) text = text.slice(0, 1400) + '…\n\n[Read full tafsir at quran.com]';
+        text = (tmp.textContent||tmp.innerText||'').replace(/\s{3,}/g,'\n\n').trim();
+        if (text.length > 1500) text = text.slice(0,1500)+'…\n\n[See full commentary at quran.com]';
         break;
       }
-    } catch(e) { /* try next */ }
+    } catch(e) {}
   }
 
-  if (!text) text = 'Tafsir unavailable for this verse. Visit quran.com for the full Ibn Kathir commentary.';
+  if (!text) {
+    // Fallback note for sources with limited English availability
+    const notes = {
+      'Al-Tabari': 'Al-Tabari\'s tafsir (Jami al-Bayan) is primarily available in Arabic. English translation is not yet available via free APIs. Recommended: Visit altafsir.com for the Arabic text.',
+      'Maariful Quran': 'Maariful Quran by Mufti Muhammad Shafi. English text unavailable via this API for this verse. Visit muftisays.com or islamicstudies.info for the full English edition.',
+    };
+    text = notes[sourceName] || `${sourceName} tafsir unavailable for this verse.`;
+  }
 
-  state.openTafsirs[idx] = text;
-  const tafsirEl = document.querySelector(`#tafsir-${idx} .tafsir-text`);
-  if (tafsirEl) tafsirEl.textContent = text;
+  if (!S.tafsirSources[idx]) S.tafsirSources[idx] = {};
+  S.tafsirSources[idx][sourceName] = text;
+  if (body) body.textContent = text;
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  AUDIO
-// ─────────────────────────────────────────────
-function getAudioUrl(surahNum, verseNum) {
-  const reciter = document.getElementById("reciterSelect").value;
-  // CDN uses global ayah number (1-6236), not surah:verse format
-  const globalNum = state.verses[state.currentVerseIdx] ? state.verses[state.currentVerseIdx].number : null;
-  if (!globalNum) return "";
-  return `https://cdn.islamic.network/quran/audio/128/${reciter}/${globalNum}.mp3`;
-}
-
+// ═══════════════════════════════════════════════════════
 function playVerse(idx) {
-  const v = state.verses[idx];
+  const v = S.verses[idx];
   if (!v) return;
 
-  if (state.currentVerseIdx !== null) {
-    const old = document.getElementById('vc-'+state.currentVerseIdx);
+  if (S.currentVerseIdx !== null) {
+    const old = document.getElementById('vc-'+S.currentVerseIdx);
     if (old) { old.classList.remove('playing'); old.querySelector('.verse-number')?.classList.remove('playing'); }
   }
-
-  state.currentVerseIdx = idx;
+  S.currentVerseIdx = idx;
   const card = document.getElementById('vc-'+idx);
   if (card) {
     card.classList.add('playing');
     card.querySelector('.verse-number')?.classList.add('playing');
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    card.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
 
+  const reciter = document.getElementById('reciterSelect').value;
+  const url = `https://cdn.islamic.network/quran/audio/128/${reciter}/${v.number}.mp3`;
+  console.log('Audio:', url);
+
   document.getElementById('audio-bar').classList.add('visible');
-  document.getElementById('audio-ref').textContent = `${state.currentSurah.englishName} · ${v.numberInSurah}`;
-  document.getElementById('audio-arabic').textContent = v.text.slice(0,80) + (v.text.length>80?'…':'');
+  document.getElementById('audio-ref').textContent = `${S.currentSurah.englishName} · ${v.numberInSurah}`;
+  document.getElementById('audio-arabic').textContent = v.text.slice(0,80)+(v.text.length>80?'…':'');
   document.getElementById('play-pause-btn').textContent = '⏸';
 
   const audio = document.getElementById('main-audio');
-  const url = `https://cdn.islamic.network/quran/audio/128/${document.getElementById("reciterSelect").value}/${v.number}.mp3`;
-  console.log('Playing:', url);
   audio.src = url;
   audio.load();
   audio.play().catch(e => {
-    console.warn('Audio failed:', url, e);
+    console.warn('Audio error:', e);
     document.getElementById('play-pause-btn').textContent = '▶';
-    document.getElementById('audio-ref').textContent += ' (unavailable)';
+    document.getElementById('audio-ref').textContent += ' (audio unavailable — try another reciter)';
   });
 }
 
 function togglePlay() {
   const audio = document.getElementById('main-audio');
   const btn = document.getElementById('play-pause-btn');
-  if (audio.paused) { audio.play(); btn.textContent = '⏸'; }
-  else { audio.pause(); btn.textContent = '▶'; }
+  if (audio.paused) { audio.play(); btn.textContent='⏸'; } else { audio.pause(); btn.textContent='▶'; }
 }
-
-function nextVerse() {
-  if (state.currentVerseIdx === null) return;
-  if (state.currentVerseIdx + 1 < state.verses.length) playVerse(state.currentVerseIdx + 1);
-}
-
-function prevVerse() {
-  if (state.currentVerseIdx === null) return;
-  if (state.currentVerseIdx - 1 >= 0) playVerse(state.currentVerseIdx - 1);
-}
-
+function nextVerse() { if (S.currentVerseIdx!==null && S.currentVerseIdx+1<S.verses.length) playVerse(S.currentVerseIdx+1); }
+function prevVerse() { if (S.currentVerseIdx!==null && S.currentVerseIdx-1>=0) playVerse(S.currentVerseIdx-1); }
 function closeAudio() {
-  const audio = document.getElementById('main-audio');
-  audio.pause(); audio.src = '';
+  document.getElementById('main-audio').pause();
   document.getElementById('audio-bar').classList.remove('visible');
-  if (state.currentVerseIdx !== null) {
-    const card = document.getElementById('vc-'+state.currentVerseIdx);
-    if (card) card.classList.remove('playing');
-  }
-  state.currentVerseIdx = null;
+  if (S.currentVerseIdx!==null) { const c=document.getElementById('vc-'+S.currentVerseIdx); if(c) c.classList.remove('playing'); }
+  S.currentVerseIdx=null;
 }
-
 function updateProgress() {
-  const audio = document.getElementById('main-audio');
-  if (!audio.duration) return;
-  document.getElementById('audio-fill').style.width = (audio.currentTime / audio.duration * 100) + '%';
+  const a=document.getElementById('main-audio');
+  if (!a.duration) return;
+  document.getElementById('audio-fill').style.width=(a.currentTime/a.duration*100)+'%';
 }
-
 function seekAudio(e) {
-  const audio = document.getElementById('main-audio');
-  if (!audio.duration) return;
-  const rect = document.getElementById('audio-progress').getBoundingClientRect();
-  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  const a=document.getElementById('main-audio');
+  if (!a.duration) return;
+  const r=document.getElementById('audio-progress').getBoundingClientRect();
+  a.currentTime=((e.clientX-r.left)/r.width)*a.duration;
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 //  QURAN SEARCH
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
 async function searchQuran() {
   const q = document.getElementById('quranSearchInput').value.trim();
   const out = document.getElementById('quran-search-results');
   if (!q) return;
-  out.innerHTML = '<div class="loader"><div class="spinner"></div>Searching…</div>';
-
+  out.innerHTML='<div class="loader"><div class="spinner"></div>Searching…</div>';
   try {
-    const r = await fetch(`${API}/search/${encodeURIComponent(q)}/all/en`);
-    const d = await r.json();
+    const d = await (await fetch(`${API}/search/${encodeURIComponent(q)}/all/en`)).json();
     const matches = d.data ? d.data.matches : [];
-    if (!matches.length) { out.innerHTML = '<div class="empty"><div class="big">○</div><div>No results found</div></div>'; return; }
+    if (!matches.length) { out.innerHTML='<div class="empty"><div class="big">○</div><div>No results</div></div>'; return; }
     const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-    out.innerHTML =
-      `<div style="font-size:13px;color:var(--text-faint);margin-bottom:16px">${matches.length > 50 ? 'Showing 50 of ' + matches.length : matches.length} result${matches.length===1?'':'s'} for "<em style="color:var(--gold)">${q}</em>"</div>` +
-      matches.slice(0,50).map(m => `
+    out.innerHTML = `<div style="font-size:13px;color:var(--text-faint);margin-bottom:14px">${Math.min(matches.length,50)} result${matches.length===1?'':'s'} for "<em style="color:var(--gold)">${q}</em>"</div>`
+      + matches.slice(0,50).map(m=>`
         <div class="search-result" onclick="goToVerse(${m.surah.number},${m.numberInSurah})">
           <div class="ref">${m.surah.englishName} (${m.surah.number}:${m.numberInSurah})</div>
           <div class="arabic">${m.text}</div>
           <div class="translation">${(m.edition&&m.edition.text||'').replace(re,'<em>$1</em>')}</div>
         </div>`).join('');
-  } catch(e) {
-    out.innerHTML = '<div class="empty"><div class="big">⚠</div><div>Search failed. Try again.</div></div>';
-  }
+  } catch(e) { out.innerHTML='<div class="empty"><div class="big">⚠</div><div>Search failed.</div></div>'; }
 }
 
 async function goToVerse(surahNum, verseNum) {
   document.getElementById('surahSelect').value = surahNum;
   showSection('quran');
   await loadSurah();
-  setTimeout(() => {
-    const card = document.getElementById('vc-'+(verseNum-1));
-    if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
-  }, 700);
+  setTimeout(()=>{ const c=document.getElementById('vc-'+(verseNum-1)); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); }, 700);
 }
 
-// ─────────────────────────────────────────────
-//  SUNNAH — CURATED HADITHS
-// ─────────────────────────────────────────────
-const CURATED_HADITHS = [
-  { text:"Actions are but by intentions, and every man shall have only that which he intended.", arabic:"إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى", source:"Sahih al-Bukhari 1", grade:"Sahih", category:"manners" },
-  { text:"The strong man is not the one who can overpower others, but the one who controls himself when angry.", arabic:"لَيْسَ الشَّدِيدُ بِالصُّرَعَةِ إِنَّمَا الشَّدِيدُ الَّذِي يَمْلِكُ نَفْسَهُ عِنْدَ الْغَضَبِ", source:"Sahih al-Bukhari 6114", grade:"Sahih", category:"manners" },
-  { text:"None of you truly believes until he loves for his brother what he loves for himself.", arabic:"لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ", source:"Sahih al-Bukhari 13", grade:"Sahih", category:"manners" },
-  { text:"Make things easy and do not make them difficult; give glad tidings and do not make people run away.", arabic:"يَسِّرُوا وَلاَ تُعَسِّرُوا وَبَشِّرُوا وَلاَ تُنَفِّرُوا", source:"Sahih al-Bukhari 69", grade:"Sahih", category:"manners" },
-  { text:"Whoever does not show mercy to people, Allah will not show mercy to him.", arabic:"مَنْ لَا يَرْحَمُ النَّاسَ لَا يَرْحَمُهُ اللَّهُ", source:"Sahih al-Bukhari 7376", grade:"Sahih", category:"manners" },
-  { text:"There is in the body a piece of flesh: if it is sound, the whole body will be sound; if it is corrupt, the whole body will be corrupt. Verily it is the heart.", arabic:"أَلاَ وَإِنَّ فِي الْجَسَدِ مُضْغَةً إِذَا صَلَحَتْ صَلَحَ الْجَسَدُ كُلُّهُ وَإِذَا فَسَدَتْ فَسَدَ الْجَسَدُ كُلُّهُ أَلاَ وَهِيَ الْقَلْبُ", source:"Sahih al-Bukhari 52", grade:"Sahih", category:"manners" },
-  { text:"Whoever believes in Allah and the Last Day should say something good or remain silent.", arabic:"مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ", source:"Sahih al-Bukhari 6018", grade:"Sahih", category:"manners" },
-  { text:"The best of you are those who learn the Quran and teach it.", arabic:"خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", source:"Sahih al-Bukhari 5027", grade:"Sahih", category:"knowledge" },
-  { text:"Seeking knowledge is an obligation upon every Muslim.", arabic:"طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ", source:"Ibn Majah 224", grade:"Sahih", category:"knowledge" },
-  { text:"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.", arabic:"مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", source:"Sahih Muslim 2699", grade:"Sahih", category:"knowledge" },
-  { text:"When a man dies, his deeds come to an end except for three things: Sadaqah Jariyah, knowledge from which benefit is gained, or a righteous child who prays for him.", arabic:"إِذَا مَاتَ الإِنْسَانُ انْقَطَعَ عَنْهُ عَمَلُهُ إِلاَّ مِنْ ثَلاَثَةٍ", source:"Sahih Muslim 1631", grade:"Sahih", category:"charity" },
-  { text:"Charity extinguishes sin just as water extinguishes fire.", arabic:"الصَّدَقَةُ تُطْفِئُ الْخَطِيئَةَ كَمَا يُطْفِئُ الْمَاءُ النَّارَ", source:"Tirmidhi 2616", grade:"Sahih", category:"charity" },
-  { text:"The upper hand is better than the lower hand. The upper hand is the one that gives and the lower is the one that takes.", arabic:"الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى وَالْيَدُ الْعُلْيَا الْمُنْفِقَةُ", source:"Sahih al-Bukhari 1427", grade:"Sahih", category:"charity" },
-  { text:"Not a single one of you will enter Paradise by his deeds alone. They said: Not even you, O Messenger of Allah? He said: Not even me, unless Allah covers me with His grace and mercy.", arabic:"لَنْ يُدْخِلَ أَحَدًا مِنْكُمْ عَمَلُهُ الْجَنَّةَ", source:"Sahih Muslim 2816", grade:"Sahih", category:"paradise" },
-  { text:"In Paradise there are things which no eye has seen, no ear has heard, and no human heart has conceived.", arabic:"فِيهَا مَا لَا عَيْنٌ رَأَتْ وَلَا أُذُنٌ سَمِعَتْ وَلَا خَطَرَ عَلَى قَلْبِ بَشَرٍ", source:"Sahih al-Bukhari 3244", grade:"Sahih", category:"paradise" },
-  { text:"The prayer is the pillar of the religion; whoever abandons it has demolished the religion.", arabic:"الصَّلَاةُ عِمَادُ الدِّينِ فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ", source:"Al-Bayhaqi", grade:"Hasan", category:"prayer" },
-  { text:"The first matter that the servant will be brought to account for on the Day of Judgment is the prayer.", arabic:"أَوَّلُ مَا يُحَاسَبُ عَلَيْهِ الْعَبْدُ يَوْمَ الْقِيَامَةِ الصَّلَاةُ", source:"Tirmidhi 413", grade:"Sahih", category:"prayer" },
-  { text:"Pray as you have seen me praying.", arabic:"صَلُّوا كَمَا رَأَيْتُمُونِي أُصَلِّي", source:"Sahih al-Bukhari 631", grade:"Sahih", category:"prayer" },
-  { text:"Whoever fasts Ramadan out of faith and hoping for reward will have his past sins forgiven.", arabic:"مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ", source:"Sahih al-Bukhari 38", grade:"Sahih", category:"fasting" },
-  { text:"Fasting is a shield; when one of you is fasting, he should not engage in obscene speech or behave ignorantly.", arabic:"الصِّيَامُ جُنَّةٌ فَإِذَا كَانَ يَوْمُ صَوْمِ أَحَدِكُمْ فَلَا يَرْفُثْ وَلَا يَصْخَبْ", source:"Sahih al-Bukhari 1904", grade:"Sahih", category:"fasting" },
-  { text:"The best of you are those who are best to their wives.", arabic:"خَيْرُكُمْ خَيْرُكُمْ لِأَهْلِهِ وَأَنَا خَيْرُكُمْ لِأَهْلِي", source:"Tirmidhi 3895", grade:"Sahih", category:"marriage" },
-  { text:"Marriage is part of my sunnah, and whoever does not follow my sunnah has nothing to do with me.", arabic:"النِّكَاحُ مِنْ سُنَّتِي فَمَنْ لَمْ يَعْمَلْ بِسُنَّتِي فَلَيْسَ مِنِّي", source:"Ibn Majah 1846", grade:"Sahih", category:"marriage" },
-  { text:"SubhanAllahi wa bihamdihi — whoever says this one hundred times a day will have his sins forgiven even if they were like the foam of the sea.", arabic:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", source:"Sahih al-Bukhari 6405", grade:"Sahih", category:"dhikr" },
-  { text:"Two phrases are dear to the Most Merciful, light on the tongue, and heavy on the Scale: SubhanAllahi wa bihamdihi, SubhanAllahil-Azim.", arabic:"كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ ثَقِيلَتَانِ فِي الْمِيزَانِ حَبِيبَتَانِ إِلَى الرَّحْمَنِ", source:"Sahih al-Bukhari 6682", grade:"Sahih", category:"dhikr" },
-  { text:"Remember Allah often, for it is a light for your heart.", arabic:"أَكْثِرُوا ذِكْرَ اللَّهِ فَإِنَّهُ نُورٌ لِقُلُوبِكُمْ", source:"Various narrations", grade:"Hasan", category:"dhikr" },
-  { text:"Remember death often, for it demolishes pleasures and reminds of what lies ahead.", arabic:"أَكْثِرُوا ذِكْرَ هَاذِمِ اللَّذَّاتِ الْمَوْتَ", source:"Tirmidhi 2307", grade:"Hasan", category:"death" },
-  { text:"Be in this world as if you were a stranger or a traveler.", arabic:"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ", source:"Sahih al-Bukhari 6416", grade:"Sahih", category:"death" },
-  { text:"Cleanliness is half of faith.", arabic:"الطَّهُورُ شَطْرُ الإِيمَانِ", source:"Sahih Muslim 223", grade:"Sahih", category:"purification" },
-  { text:"The key to prayer is purification, its opening is takbir, and its closing is taslim.", arabic:"مِفْتَاحُ الصَّلاةِ الطَّهُورُ وَتَحْرِيمُهَا التَّكْبِيرُ وَتَحْلِيلُهَا التَّسْلِيمُ", source:"Tirmidhi 3", grade:"Sahih", category:"purification" },
-  { text:"The halal is clear and the haram is clear, and between them are matters that are doubtful. Whoever avoids the doubtful has preserved his religion.", arabic:"الْحَلالُ بَيِّنٌ وَالْحَرَامُ بَيِّنٌ وَبَيْنَهُمَا أُمُورٌ مُشْتَبِهَاتٌ", source:"Sahih al-Bukhari 52", grade:"Sahih", category:"trade" },
-  { text:"No man earns anything better than what he earns with his own hands, and what a man spends on himself, his wife, his children and his servants is charity.", arabic:"مَا كَسَبَ أَحَدٌ قَطُّ أَفْضَلَ مِنْ عَمَلِ يَدِهِ", source:"Ibn Majah 2138", grade:"Sahih", category:"trade" },
+// ═══════════════════════════════════════════════════════
+//  BOOKMARKS
+// ═══════════════════════════════════════════════════════
+function loadBookmarks() {
+  try { const r=localStorage.getItem('noor_bm_v3'); if(r) Object.assign(S.bookmarks,JSON.parse(r)); } catch(e){}
+  updateBmCount();
+}
+function saveBookmarks() {
+  try { localStorage.setItem('noor_bm_v3',JSON.stringify(S.bookmarks)); } catch(e){}
+  updateBmCount();
+}
+function isBookmarked(sn,vn) { return !!S.bookmarks[`${sn}:${vn}`]; }
+function updateBmCount() {
+  const n=Object.keys(S.bookmarks).length;
+  const el=document.getElementById('bm-count');
+  el.textContent=n>0?`(${n})`:''; el.style.display=n>0?'inline':'none';
+}
+function toggleBookmark(idx) {
+  if (!S.currentSurah) return;
+  const v=S.verses[idx], t=S.translation[idx];
+  const key=`${S.currentSurah.number}:${v.numberInSurah}`;
+  if (S.bookmarks[key]) { delete S.bookmarks[key]; } else {
+    S.bookmarks[key]={ surahNum:S.currentSurah.number, surahName:S.currentSurah.englishName, verseNum:v.numberInSurah, arabic:v.text, translation:t?t.text:'' };
+  }
+  saveBookmarks();
+  const bm=!!S.bookmarks[key];
+  const card=document.getElementById('vc-'+idx);
+  const btn=card?card.querySelector('.bm-btn'):null;
+  if(card) card.classList.toggle('bookmarked',bm);
+  if(btn) { btn.textContent=bm?'★':'☆'; btn.classList.toggle('active',bm); }
+}
+function renderBookmarks() {
+  const out=document.getElementById('bookmarks-content');
+  const keys=Object.keys(S.bookmarks);
+  if (!keys.length) { out.innerHTML='<div class="empty"><div class="big">🔖</div><div>No bookmarks yet</div><div style="font-size:13px;color:var(--text-faint);margin-top:6px">Tap ☆ on any verse</div></div>'; return; }
+  out.innerHTML=keys.map(k=>{ const b=S.bookmarks[k]; return `
+    <div class="bm-verse-card" onclick="goToVerse(${b.surahNum},${b.verseNum})">
+      <button class="bm-remove" onclick="event.stopPropagation();removeBookmark('${k}')">✕</button>
+      <div class="bm-ref">${b.surahName} · ${b.surahNum}:${b.verseNum}</div>
+      <div class="bm-arabic">${b.arabic}</div>
+      <div class="bm-translation">${b.translation}</div>
+    </div>`; }).join('');
+}
+function removeBookmark(key) { delete S.bookmarks[key]; saveBookmarks(); renderBookmarks(); }
+function clearAllBookmarks() {
+  if (!Object.keys(S.bookmarks).length) return;
+  if (confirm('Clear all bookmarks?')) { S.bookmarks={}; saveBookmarks(); renderBookmarks(); }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SUNNAH — HADITHS
+// ═══════════════════════════════════════════════════════
+const CURATED = [
+  {text:"Actions are but by intentions, and every man shall have only that which he intended.",arabic:"إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ",source:"Bukhari 1",grade:"Sahih",category:"manners"},
+  {text:"The strong man is not the one who can overpower others, but the one who controls himself when angry.",arabic:"لَيْسَ الشَّدِيدُ بِالصُّرَعَةِ",source:"Bukhari 6114",grade:"Sahih",category:"manners"},
+  {text:"None of you truly believes until he loves for his brother what he loves for himself.",arabic:"لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ",source:"Bukhari 13",grade:"Sahih",category:"manners"},
+  {text:"Make things easy and do not make them difficult; give glad tidings and do not make people run away.",arabic:"يَسِّرُوا وَلاَ تُعَسِّرُوا",source:"Bukhari 69",grade:"Sahih",category:"manners"},
+  {text:"Whoever does not show mercy to people, Allah will not show mercy to him.",arabic:"مَنْ لَا يَرْحَمُ النَّاسَ لَا يَرْحَمُهُ اللَّهُ",source:"Bukhari 7376",grade:"Sahih",category:"manners"},
+  {text:"There is in the body a piece of flesh: if it is sound, the whole body will be sound. Verily it is the heart.",arabic:"أَلاَ وَإِنَّ فِي الْجَسَدِ مُضْغَةً",source:"Bukhari 52",grade:"Sahih",category:"manners"},
+  {text:"Whoever believes in Allah and the Last Day should say something good or remain silent.",arabic:"مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",source:"Bukhari 6018",grade:"Sahih",category:"manners"},
+  {text:"The best of you are those who learn the Quran and teach it.",arabic:"خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",source:"Bukhari 5027",grade:"Sahih",category:"knowledge"},
+  {text:"Seeking knowledge is an obligation upon every Muslim.",arabic:"طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ",source:"Ibn Majah 224",grade:"Sahih",category:"knowledge"},
+  {text:"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.",arabic:"مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا",source:"Muslim 2699",grade:"Sahih",category:"knowledge"},
+  {text:"When a man dies, his deeds come to an end except for three: Sadaqah Jariyah, knowledge from which benefit is gained, or a righteous child who prays for him.",arabic:"إِذَا مَاتَ الإِنْسَانُ انْقَطَعَ عَنْهُ عَمَلُهُ إِلاَّ مِنْ ثَلاَثَةٍ",source:"Muslim 1631",grade:"Sahih",category:"charity"},
+  {text:"Charity extinguishes sin just as water extinguishes fire.",arabic:"الصَّدَقَةُ تُطْفِئُ الْخَطِيئَةَ كَمَا يُطْفِئُ الْمَاءُ النَّارَ",source:"Tirmidhi 2616",grade:"Sahih",category:"charity"},
+  {text:"The upper hand is better than the lower hand. The upper hand gives and the lower takes.",arabic:"الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى",source:"Bukhari 1427",grade:"Sahih",category:"charity"},
+  {text:"Not a single one of you will enter Paradise by his deeds alone — not even me, unless Allah covers me with His grace and mercy.",arabic:"لَنْ يُدْخِلَ أَحَدًا مِنْكُمْ عَمَلُهُ الْجَنَّةَ",source:"Muslim 2816",grade:"Sahih",category:"paradise"},
+  {text:"In Paradise there are things which no eye has seen, no ear has heard, and no human heart has conceived.",arabic:"فِيهَا مَا لَا عَيْنٌ رَأَتْ وَلَا أُذُنٌ سَمِعَتْ",source:"Bukhari 3244",grade:"Sahih",category:"paradise"},
+  {text:"The prayer is the pillar of the religion; whoever abandons it has demolished the religion.",arabic:"الصَّلَاةُ عِمَادُ الدِّينِ",source:"Al-Bayhaqi",grade:"Hasan",category:"prayer"},
+  {text:"The first matter that the servant will be brought to account for on the Day of Judgment is the prayer.",arabic:"أَوَّلُ مَا يُحَاسَبُ عَلَيْهِ الْعَبْدُ الصَّلَاةُ",source:"Tirmidhi 413",grade:"Sahih",category:"prayer"},
+  {text:"Pray as you have seen me praying.",arabic:"صَلُّوا كَمَا رَأَيْتُمُونِي أُصَلِّي",source:"Bukhari 631",grade:"Sahih",category:"prayer"},
+  {text:"Whoever fasts Ramadan out of faith and hoping for reward will have his past sins forgiven.",arabic:"مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا",source:"Bukhari 38",grade:"Sahih",category:"fasting"},
+  {text:"Fasting is a shield; when one of you is fasting, he should not engage in obscene speech or ignorant behavior.",arabic:"الصِّيَامُ جُنَّةٌ",source:"Bukhari 1904",grade:"Sahih",category:"fasting"},
+  {text:"The best of you are those who are best to their wives.",arabic:"خَيْرُكُمْ خَيْرُكُمْ لِأَهْلِهِ",source:"Tirmidhi 3895",grade:"Sahih",category:"marriage"},
+  {text:"Marriage is part of my sunnah, and whoever does not follow my sunnah has nothing to do with me.",arabic:"النِّكَاحُ مِنْ سُنَّتِي",source:"Ibn Majah 1846",grade:"Sahih",category:"marriage"},
+  {text:"SubhanAllahi wa bihamdihi — whoever says this one hundred times a day will have his sins forgiven even if they were like the foam of the sea.",arabic:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",source:"Bukhari 6405",grade:"Sahih",category:"dhikr"},
+  {text:"Two phrases are dear to the Most Merciful, light on the tongue, and heavy on the Scale: SubhanAllahi wa bihamdihi, SubhanAllahil-Azim.",arabic:"كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ",source:"Bukhari 6682",grade:"Sahih",category:"dhikr"},
+  {text:"Remember Allah often, for it is a light for your heart.",arabic:"أَكْثِرُوا ذِكْرَ اللَّهِ فَإِنَّهُ نُورٌ",source:"Various",grade:"Hasan",category:"dhikr"},
+  {text:"Remember death often, for it demolishes pleasures and reminds of what lies ahead.",arabic:"أَكْثِرُوا ذِكْرَ هَاذِمِ اللَّذَّاتِ الْمَوْتَ",source:"Tirmidhi 2307",grade:"Hasan",category:"death"},
+  {text:"Be in this world as if you were a stranger or a traveler.",arabic:"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ",source:"Bukhari 6416",grade:"Sahih",category:"death"},
+  {text:"Cleanliness is half of faith.",arabic:"الطَّهُورُ شَطْرُ الإِيمَانِ",source:"Muslim 223",grade:"Sahih",category:"purification"},
+  {text:"The key to prayer is purification, its opening is takbir, and its closing is taslim.",arabic:"مِفْتَاحُ الصَّلاةِ الطَّهُورُ",source:"Tirmidhi 3",grade:"Sahih",category:"purification"},
+  {text:"The halal is clear and the haram is clear, and between them are matters that are doubtful. Whoever avoids the doubtful has preserved his religion.",arabic:"الْحَلالُ بَيِّنٌ وَالْحَرَامُ بَيِّنٌ",source:"Bukhari 52",grade:"Sahih",category:"trade"},
+  {text:"No man earns anything better than what he earns with his own hands.",arabic:"مَا كَسَبَ أَحَدٌ قَطُّ أَفْضَلَ مِنْ عَمَلِ يَدِهِ",source:"Ibn Majah 2138",grade:"Sahih",category:"trade"},
 ];
 
-let hadithKeyword = '';
-let hadithCategory = '';
+const BOOK_META = {
+  bukhari:  {chapters:97,  name:'Sahih al-Bukhari'},
+  muslim:   {chapters:56,  name:'Sahih Muslim'},
+  abudawud: {chapters:43,  name:'Sunan Abu Dawud'},
+  tirmidhi: {chapters:49,  name:'Jami at-Tirmidhi'},
+  ibnmajah: {chapters:49,  name:'Sunan Ibn Majah'},
+  nasai:    {chapters:51,  name:'Sunan an-Nasai'},
+};
 
-function loadHadiths() {
-  state.hadithData = [...CURATED_HADITHS];
-  applyHadithFilter();
+function loadHadiths() { S.hadithData=[...CURATED]; applyHadithFilter(); }
+
+function selectBook(book, btn) {
+  S.currentBook = book; S.currentChapter = null;
+  document.querySelectorAll('.book-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildChapterList(book);
+}
+
+function buildChapterList(book) {
+  const meta = BOOK_META[book] || {chapters:10};
+  const list = document.getElementById('chapterList');
+  list.innerHTML = '';
+  for (let i=1; i<=meta.chapters; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'chapter-chip';
+    btn.textContent = `Ch. ${i}`;
+    btn.onclick = () => loadChapter(book, i, btn);
+    list.appendChild(btn);
+  }
+}
+
+async function loadChapter(book, ch, btn) {
+  document.querySelectorAll('.chapter-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.currentChapter = ch;
+  const out = document.getElementById('sunnah-content');
+  out.innerHTML = `<div class="loader"><div class="spinner"></div>Loading ${BOOK_META[book].name}, Chapter ${ch}…</div>`;
+
+  try {
+    const r = await fetch(`${HADITH_API}/chapter/${book}/${ch}?limit=40`);
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    const hadiths = d.hadiths || d.data || [];
+    if (!hadiths.length) throw new Error();
+    const mapped = hadiths.map(h=>({
+      text: h.hadithEnglish||h.english||h.text||'',
+      arabic: h.hadithArabic||h.arabic||'',
+      source: `${BOOK_META[book].name} Ch.${ch} #${h.hadithnumber||h.id||''}`,
+      grade: h.grade||'', category:'general'
+    }));
+    S.hadithData = [...CURATED, ...mapped];
+    renderHadiths(mapped);
+  } catch(e) {
+    // Fallback: show curated + note
+    out.innerHTML = `<div class="hadith-card" style="border-color:var(--gold-dim)">
+      <div style="font-size:14px;color:var(--text-dim)">
+        ℹ️ The hadith API may restrict browser access due to CORS. Showing curated collection.<br>
+        <a href="https://sunnah.com/${book}/${ch}" target="_blank" style="color:var(--teal)">View ${BOOK_META[book].name} Ch.${ch} on sunnah.com →</a>
+      </div>
+    </div>` + CURATED.map(h=>hadithCardHTML(h)).join('');
+  }
 }
 
 function filterHadith(cat, btn) {
-  hadithCategory = cat;
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  S.hadithCategory = cat;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   applyHadithFilter();
 }
 
 function searchHadith() {
-  hadithKeyword = document.getElementById('hadithSearch').value.trim().toLowerCase();
+  S.hadithKeyword = document.getElementById('hadithSearch').value.trim().toLowerCase();
   applyHadithFilter();
 }
 
 function applyHadithFilter() {
-  let results = state.hadithData;
-  if (hadithCategory) results = results.filter(h => h.category === hadithCategory);
-  if (hadithKeyword)  results = results.filter(h =>
-    h.text.toLowerCase().includes(hadithKeyword) ||
-    h.source.toLowerCase().includes(hadithKeyword) ||
-    (h.arabic && h.arabic.includes(hadithKeyword))
-  );
-  renderHadiths(results);
+  let r = S.hadithData;
+  if (S.hadithCategory) r = r.filter(h=>h.category===S.hadithCategory);
+  if (S.hadithKeyword)  r = r.filter(h=>h.text.toLowerCase().includes(S.hadithKeyword)||h.source.toLowerCase().includes(S.hadithKeyword)||(h.arabic&&h.arabic.includes(S.hadithKeyword)));
+  renderHadiths(r);
 }
 
-// ─────────────────────────────────────────────
-//  LOAD HADITHS FROM AHADITH.CO API
-// ─────────────────────────────────────────────
-const BOOK_CHAPTERS = { bukhari:97, muslim:56, abudawud:43, tirmidhi:49, ibnmajah:49, nasai:51 };
-
-document.getElementById('bookSelect').addEventListener('change', function() {
-  const book = this.value;
-  const chSel = document.getElementById('chapterSelect');
-  chSel.innerHTML = '';
-  const max = BOOK_CHAPTERS[book] || 10;
-  for (let i = 1; i <= max; i++) {
-    const o = document.createElement('option');
-    o.value = i; o.textContent = `Chapter ${i}`;
-    chSel.appendChild(o);
-  }
-});
-
-async function loadHadithsFromAPI() {
-  const book = document.getElementById('bookSelect').value;
-  const ch   = document.getElementById('chapterSelect').value;
-  if (!book) { alert('Please select a book first.'); return; }
-  const out = document.getElementById('sunnah-content');
-  out.innerHTML = `<div class="loader"><div class="spinner"></div>Loading from ${book}, chapter ${ch}…</div>`;
-
-  try {
-    const r = await fetch(`${HADITH_API}/chapter/${book}/${ch}?limit=30`);
-    if (!r.ok) throw new Error('API error');
-    const d = await r.json();
-    const hadiths = d.hadiths || d.data || [];
-
-    if (!hadiths.length) {
-      out.innerHTML = '<div class="empty"><div class="big">○</div><div>No hadiths in this chapter.</div></div>';
-      return;
-    }
-
-    const mapped = hadiths.map(h => ({
-      text: h.hadithEnglish || h.english || h.text || '',
-      arabic: h.hadithArabic || h.arabic || '',
-      source: `${book.charAt(0).toUpperCase()+book.slice(1)} Ch.${ch} #${h.hadithnumber||h.id||''}`,
-      grade: h.grade || '',
-      category: 'general',
-    }));
-
-    // Merge into state data
-    state.hadithData = [...CURATED_HADITHS, ...mapped];
-    renderHadiths(mapped);
-  } catch(e) {
-    out.innerHTML = `<div class="empty"><div class="big">⚠</div>
-      <div>API unavailable — showing curated collection</div>
-      <div style="font-size:12px;color:var(--text-faint);margin-top:8px">Some hadith APIs restrict browser access. Try <a href="https://sunnah.com" target="_blank" style="color:var(--teal)">sunnah.com</a> for the full collection.</div>
-      </div>`;
-    setTimeout(() => renderHadiths(CURATED_HADITHS), 2000);
-  }
+function hadithCardHTML(h) {
+  const g = (h.grade||'').toLowerCase();
+  return `<div class="hadith-card">
+    ${h.arabic?`<div class="hadith-arabic">${h.arabic}</div>`:''}
+    <div class="hadith-text">${h.text}</div>
+    <div class="hadith-meta">
+      <span class="hadith-source">${h.source}</span>
+      ${h.grade?`<span class="hadith-grade ${g==='sahih'?'sahih':g==='hasan'?'hasan':''}">${h.grade}</span>`:''}
+      ${h.category&&h.category!=='general'?`<span style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em">${h.category}</span>`:''}
+    </div>
+  </div>`;
 }
 
 function renderHadiths(list) {
   const out = document.getElementById('sunnah-content');
-  if (!list.length) { out.innerHTML = '<div class="empty"><div class="big">○</div><div>No hadiths found</div></div>'; return; }
-  out.innerHTML = list.map(h => `
-    <div class="hadith-card">
-      ${h.arabic ? `<div class="hadith-arabic">${h.arabic}</div>` : ''}
-      <div class="hadith-text">${h.text}</div>
-      <div class="hadith-meta">
-        <span class="hadith-source">${h.source}</span>
-        ${h.grade ? `<span class="hadith-grade ${h.grade==='Sahih'?'sahih':h.grade==='Hasan'?'hasan':''}">${h.grade}</span>` : ''}
-        ${h.category && h.category!=='general' ? `<span style="font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em">${h.category}</span>` : ''}
-      </div>
-    </div>`).join('');
+  if (!list.length) { out.innerHTML='<div class="empty"><div class="big">○</div><div>No hadiths found</div></div>'; return; }
+  out.innerHTML = list.map(hadithCardHTML).join('');
 }
 
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  COMMUNITY
+// ═══════════════════════════════════════════════════════
+const CAT_LABELS = { question:'❓ Question', reflection:'🌙 Reflection', tafsir:'📖 Tafsir', sunnah:'📿 Sunnah', general:'💬 General' };
+
+function loadPosts() {
+  try { const r=localStorage.getItem('noor_posts_v1'); if(r) S.posts=JSON.parse(r); } catch(e){}
+  // Seed with demo posts if empty
+  if (S.posts.length === 0) {
+    S.posts = [
+      { id:'p1', author:'Ibrahim', category:'question', body:'What is the significance of Surah Al-Kahf on Fridays? I have heard it provides light between the two Fridays.', timestamp: Date.now()-3600000*5, likes:['seed1','seed2'], replies:[{author:'Fatima',text:'Yes, the Prophet ﷺ said whoever reads it on Friday will have a light that shines between the two Fridays — Sahih narrations in Hakim and Bayhaqi confirm this.',time:Date.now()-3600000*4}] },
+      { id:'p2', author:'Aisha', category:'reflection', body:'Reading Ayat al-Kursi tonight and reflecting on كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ — His Kursi extends over the heavens and earth. SubhanAllah. The vastness of Allah\'s knowledge and dominion is beyond imagination.', timestamp:Date.now()-3600000*12, likes:['seed3'], replies:[] },
+      { id:'p3', author:'Yusuf', category:'tafsir', body:'Ibn Kathir\'s commentary on Surah Al-Baqarah 2:286 (Allah does not burden a soul beyond that it can bear) is incredibly moving. He mentions this was a relief to the Companions when the preceding verse about being held accountable even for inner thoughts was revealed.', timestamp:Date.now()-86400000, likes:[], replies:[] },
+    ];
+    savePosts();
+  }
+}
+function savePosts() { try { localStorage.setItem('noor_posts_v1', JSON.stringify(S.posts)); } catch(e){} }
+
+function updateCharCount() {
+  const val = document.getElementById('postBody').value;
+  document.getElementById('charCount').textContent = val.length;
+}
+
+function submitPost() {
+  const body = document.getElementById('postBody').value.trim();
+  if (!body) { alert('Please write something first.'); return; }
+  const author   = document.getElementById('postAuthor').value.trim() || 'Anonymous';
+  const category = document.getElementById('postCategory').value;
+  const post = { id:'p'+Date.now(), author, category, body, timestamp:Date.now(), likes:[], replies:[] };
+  S.posts.unshift(post);
+  savePosts();
+  document.getElementById('postBody').value = '';
+  document.getElementById('postAuthor').value = '';
+  document.getElementById('charCount').textContent = '0';
+  S.postFilter = 'all';
+  document.querySelectorAll('.community-filters .pill').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderFeed();
+}
+
+function filterPosts(cat, btn) {
+  S.postFilter = cat;
+  document.querySelectorAll('.community-filters .pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFeed();
+}
+
+function toggleLike(postId) {
+  const post = S.posts.find(p=>p.id===postId);
+  if (!post) return;
+  const uid = 'anon_' + (localStorage.getItem('noor_uid')||Math.random().toString(36).slice(2,8));
+  try { localStorage.setItem('noor_uid', uid.replace('anon_','')); } catch(e){}
+  const idx = post.likes.indexOf(uid);
+  if (idx > -1) { post.likes.splice(idx,1); } else { post.likes.push(uid); }
+  savePosts();
+  // Update just the like button
+  const btn = document.getElementById(`like-${postId}`);
+  if (btn) {
+    const liked = post.likes.includes(uid);
+    btn.className = `like-btn ${liked?'liked':''}`;
+    btn.innerHTML = `♡ ${post.likes.length}`;
+  }
+}
+
+function toggleReplies(postId) {
+  const sec = document.getElementById(`replies-${postId}`);
+  if (sec) sec.classList.toggle('open');
+}
+
+function submitReply(postId) {
+  const inp = document.getElementById(`reply-inp-${postId}`);
+  const text = inp ? inp.value.trim() : '';
+  if (!text) return;
+  const post = S.posts.find(p=>p.id===postId);
+  if (!post) return;
+  post.replies.push({ author:'Anonymous', text, time:Date.now() });
+  savePosts();
+  inp.value = '';
+  // Re-render reply list
+  const replyList = document.getElementById(`reply-list-${postId}`);
+  if (replyList) replyList.innerHTML = post.replies.map(r=>replyHTML(r)).join('');
+  const countEl = document.getElementById(`reply-count-${postId}`);
+  if (countEl) countEl.textContent = `${post.replies.length} reply${post.replies.length===1?'':'s'}`;
+}
+
+function replyHTML(r) {
+  return `<div class="reply-card">
+    <div class="reply-avatar">${r.author[0]}</div>
+    <div class="reply-body">
+      <div class="reply-author">${r.author}</div>
+      <div class="reply-text">${escapeHTML(r.text)}</div>
+    </div>
+  </div>`;
+}
+
+function timeAgo(ts) {
+  const d = Date.now() - ts;
+  if (d < 60000) return 'just now';
+  if (d < 3600000) return Math.floor(d/60000)+'m ago';
+  if (d < 86400000) return Math.floor(d/3600000)+'h ago';
+  return Math.floor(d/86400000)+'d ago';
+}
+
+function escapeHTML(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getUID() {
+  let uid = localStorage.getItem('noor_uid');
+  if (!uid) { uid = Math.random().toString(36).slice(2,8); try{localStorage.setItem('noor_uid',uid);}catch(e){} }
+  return 'anon_'+uid;
+}
+
+function renderFeed() {
+  const out = document.getElementById('community-feed');
+  let posts = S.postFilter==='all' ? S.posts : S.posts.filter(p=>p.category===S.postFilter);
+  if (!posts.length) {
+    out.innerHTML = '<div class="empty"><div class="big">💬</div><div>No posts yet — be the first!</div></div>';
+    return;
+  }
+  const uid = getUID();
+  out.innerHTML = posts.map(p => {
+    const liked = p.likes.includes(uid);
+    return `<div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar">${p.author[0]}</div>
+        <div class="post-meta">
+          <div class="post-author">${escapeHTML(p.author)}</div>
+          <div class="post-time">${timeAgo(p.timestamp)}</div>
+        </div>
+        <span class="post-cat-badge">${CAT_LABELS[p.category]||p.category}</span>
+      </div>
+      <div class="post-body">${escapeHTML(p.body)}</div>
+      <div class="post-actions">
+        <button class="like-btn ${liked?'liked':''}" id="like-${p.id}" onclick="toggleLike('${p.id}')">♡ ${p.likes.length}</button>
+        <span class="post-replies" onclick="toggleReplies('${p.id}')" style="cursor:pointer" id="reply-count-${p.id}">${p.replies.length} reply${p.replies.length===1?'':'s'}</span>
+      </div>
+      <div class="reply-section" id="replies-${p.id}">
+        <div id="reply-list-${p.id}">${p.replies.map(r=>replyHTML(r)).join('')}</div>
+        <div class="reply-input-row">
+          <input type="text" class="reply-input" id="reply-inp-${p.id}" placeholder="Write a reply…" onkeydown="if(event.key==='Enter')submitReply('${p.id}')" aria-label="Write a reply"/>
+          <button class="reply-submit" onclick="submitReply('${p.id}')">Reply</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
 //  INIT
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+loadPrefs();
 loadBookmarks();
+loadPosts();
 loadSurahList();
+loadHadiths();
+buildChapterList('bukhari');
 </script>
 </body>
 </html>
