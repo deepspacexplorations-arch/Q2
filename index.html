@@ -483,11 +483,11 @@
       </div>
       <div class="select-wrap" style="max-width:190px;">
         <select id="reciterSelect">
-          <option value="ar.alafasy">Mishary Alafasy</option>
-          <option value="ar.abdulbasitmurattal">Abdul Basit (Murattal)</option>
-          <option value="ar.minshawi">Minshawi</option>
-          <option value="ar.husary">Husary</option>
-          <option value="ar.abdulsamad">Abdul Samad</option>
+          <option value="Alafasy_128">Mishary Alafasy</option>
+          <option value="AbdulSamad_128">Abdul Samad</option>
+          <option value="Husary_128">Husary</option>
+          <option value="Minshawi_Murattal_128">Minshawi</option>
+          <option value="Mohammad_al_Tablaway_128">Al-Tablaway</option>
         </select>
       </div>
       <div class="view-toggle">
@@ -993,7 +993,8 @@ async function toggleTafsir(idx, surahNum, verseNum) {
 // ─────────────────────────────────────────────
 function getAudioUrl(surahNum, verseNum) {
   const reciter = document.getElementById('reciterSelect').value;
-  return `${AUDIO_CDN}/${reciter}/${String(surahNum).padStart(3,'0')}${String(verseNum).padStart(3,'0')}.mp3`;
+  const file = `${String(surahNum).padStart(3,'0')}${String(verseNum).padStart(3,'0')}`;
+  return `https://cdn.islamic.network/quran/audio/128/${reciter}/${file}.mp3`;
 }
 
 function playVerse(idx) {
@@ -1019,8 +1020,15 @@ function playVerse(idx) {
   document.getElementById('play-pause-btn').textContent = '⏸';
 
   const audio = document.getElementById('main-audio');
-  audio.src = getAudioUrl(state.currentSurah.number, v.numberInSurah);
-  audio.play().catch(() => { document.getElementById('play-pause-btn').textContent = '▶'; });
+  const url = getAudioUrl(state.currentSurah.number, v.numberInSurah);
+  console.log('Playing:', url);
+  audio.src = url;
+  audio.load();
+  audio.play().catch(e => {
+    console.warn('Audio failed:', url, e);
+    document.getElementById('play-pause-btn').textContent = '▶';
+    document.getElementById('audio-ref').textContent += ' (unavailable)';
+  });
 }
 
 function togglePlay() {
