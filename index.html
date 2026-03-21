@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Scheherazade+New:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran:wght@400&display=swap" rel="stylesheet"/>
 <style>
 /* ═══════════════════════════════════════════
    THEME VARIABLES
@@ -141,9 +143,11 @@ body.theme-desert nav button.active { background:rgba(193,127,58,0.1); border-co
 
 .font-ctrl { display:flex; align-items:center; gap:8px; margin-left:auto; }
 .font-ctrl label { font-size:12px; color:var(--text-faint); letter-spacing:0.08em; text-transform:uppercase; }
+.font-btn { background:none; border:none; color:var(--gold); cursor:pointer; font-size:14px; padding:2px 6px; transition:opacity 0.2s; }
+.font-btn:hover { opacity:0.7; }
 .font-slider {
   -webkit-appearance:none; appearance:none;
-  width:100px; height:3px; background:var(--border);
+  width:120px; height:3px; background:var(--border);
   border-radius:2px; outline:none; cursor:pointer;
 }
 .font-slider::-webkit-slider-thumb {
@@ -229,8 +233,9 @@ main { max-width:960px; margin:0 auto; padding:28px 20px 140px; }
 }
 body.theme-dark .surah-header::before { background:linear-gradient(135deg,rgba(201,168,76,0.05) 0%,transparent 70%); }
 .surah-name-ar {
-  font-family:'Scheherazade New', serif;
-  font-size:46px; color:var(--gold); line-height:1.4; margin-bottom:8px; direction:rtl;
+  font-family:'Amiri Quran', 'Scheherazade New', serif;
+  font-size:46px; color:var(--gold); line-height:1.6; margin-bottom:8px; direction:rtl;
+  letter-spacing:0.08em;
 }
 .surah-name-en {
   font-family:'Cormorant Garamond', serif;
@@ -282,9 +287,10 @@ body.theme-dark .verse-card.playing { box-shadow:0 0 0 2px rgba(201,168,76,0.2);
 
 .verse-arabic {
   flex:1; text-align:right; direction:rtl;
-  font-family:'Scheherazade New', serif;
+  font-family:'Amiri Quran', 'Scheherazade New', serif;
   font-size:calc(var(--base-font, 17px) + 11px);
-  line-height:2.1; color:var(--text); cursor:pointer; transition:color 0.2s;
+  line-height:2.3; color:var(--text); cursor:pointer; transition:color 0.2s;
+  letter-spacing:0.05em;
 }
 .verse-card.playing .verse-arabic { color:var(--gold); }
 
@@ -333,6 +339,7 @@ body.theme-dark .verse-card.playing { box-shadow:0 0 0 2px rgba(201,168,76,0.2);
   display:none; margin:0 16px 14px 62px;
   background:var(--surface2); border:1px solid var(--border);
   border-left:3px solid var(--teal); border-radius:10px; padding:16px;
+  position:sticky; top:100px; z-index:50; max-height:70vh; overflow-y:auto;
 }
 .tafsir-panel.open { display:block; animation:fadeUp 0.2s ease; }
 .tafsir-source-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
@@ -402,8 +409,9 @@ body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
 .search-result:hover { border-color:var(--gold); }
 .search-result .ref { font-size:12px; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:8px; }
 .search-result .arabic {
-  font-family:'Scheherazade New', serif; font-size:22px;
-  direction:rtl; text-align:right; color:var(--accent); line-height:1.9; margin-bottom:8px;
+  font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:22px;
+  direction:rtl; text-align:right; color:var(--accent); line-height:2; margin-bottom:8px;
+  letter-spacing:0.05em;
 }
 .search-result .translation { color:var(--text-dim); font-size:15px; line-height:1.6; }
 .search-result .translation em { color:var(--gold); font-style:normal; }
@@ -459,9 +467,10 @@ body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
 }
 .hadith-card:hover { border-color:var(--gold-dim); }
 .hadith-arabic {
-  font-family:'Scheherazade New', serif; font-size:calc(var(--base-font,17px)+5px);
-  direction:rtl; text-align:right; color:var(--accent); line-height:2;
+  font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:calc(var(--base-font,17px)+5px);
+  direction:rtl; text-align:right; color:var(--accent); line-height:2.2;
   margin-bottom:14px; border-right:3px solid var(--gold-dim); padding-right:14px;
+  letter-spacing:0.05em;
 }
 .hadith-text { font-size:var(--base-font,17px); line-height:1.8; color:var(--text); margin-bottom:12px; }
 .hadith-meta { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
@@ -712,11 +721,13 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
     <button class="theme-btn t-parch"         title="Parchment"   onclick="setTheme('parchment',this)"></button>
     <button class="theme-btn t-desert"        title="Desert Sand" onclick="setTheme('desert',this)"></button>
   </div>
-  <div class="font-ctrl">
-    <label for="fontSlider">Text Size</label>
-    <input type="range" id="fontSlider" class="font-slider" min="14" max="24" value="17" step="1" oninput="setFontSize(this.value)"/>
-    <span class="font-size-label" id="fontSizeLabel">17</span>
-  </div>
+<div class="font-ctrl">
+  <label>Size</label>
+  <button class="font-btn" onclick="adjustFontSize(-1)" title="Decrease font size">−</button>
+  <input type="range" id="fontSlider" class="font-slider" min="14" max="32" value="17" step="1" oninput="setFontSize(this.value)"/>
+  <button class="font-btn" onclick="adjustFontSize(1)" title="Increase font size">+</button>
+  <div class="font-size-label"><span id="fontSizeLabel">17</span>px</div>
+</div>
 </div>
 
 <main>
@@ -737,7 +748,10 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
         <option value="en.asad">Muhammad Asad</option>
         <option value="en.pickthall">Pickthall</option>
         <option value="en.yusufali">Yusuf Ali</option>
-        <option value="en.ahmedali">Ahmed Ali</option>
+        <option value="en.shakir">Muhammad Shakir</option>
+        <option value="en.muhsin">Muhsin Khan</option>
+        <option value="en.hilali">Hilali & Khan</option>
+        <option value="en.fathimy">Fateh Muhammad Jalandhry</option>
       </select>
     </div>
     <div class="sel-wrap" style="max-width:185px;">
@@ -754,9 +768,11 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
       <button id="btn-ruku"  onclick="setView('ruku')">Ruku</button>
       <button id="btn-full"  onclick="setView('full')">Full</button>
     </div>
+    <button class="action-btn" onclick="loadRandomVerse()" style="flex-shrink:0" title="Load random verse">🎲 Random</button>
   </div>
   <div class="toggle-row">
     <div class="chip"    id="chip-translit" onclick="toggleFeat('translit')"><span class="dot"></span> Transliteration</div>
+    <div class="chip"    id="chip-wordTranslit" onclick="toggleFeat('wordTranslit')"><span class="dot"></span> Word-by-Word</div>
     <div class="chip on" id="chip-trans"    onclick="toggleFeat('trans')"   ><span class="dot"></span> Translation</div>
     <div class="chip on" id="chip-tafsir"   onclick="toggleFeat('tafsir')"  ><span class="dot"></span> Tafsir</div>
   </div>
@@ -830,7 +846,7 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
 
 <!-- ═══════════════════════════════════
      BOOKMARKS
-═══��═══════════════════════════════ -->
+══�����═══════════════════════════════ -->
 <div class="panel" id="panel-bookmarks">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;">
     <div>
@@ -923,11 +939,12 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 //  STATE
 // ═══════════════════════════════════════════════════════
 const S = {
-  currentSurah: null, verses:[], translation:[], transliteration:[],
+  currentSurah: null, verses:[], translation:[], transliteration:[], wordTranslit:[],
   view:'verse', currentVerseIdx:null, currentRuku:1, rukus:[],
   hadithData:[], hadithCategory:'', hadithKeyword:'',
-  features:{ translit:false, trans:true, tafsir:true },
+  features:{ translit:false, trans:true, tafsir:true, wordTranslit:false },
   openTafsirs:{}, tafsirSources:{},  // { idx: { 'ibnkathir': text, 'jalalayn': text } }
+  tafsirScrollPos:{},  // { idx: scrollPos }
   bookmarks:{},
   posts:[], postFilter:'all',
   currentBook:'bukhari', currentChapter:null,
@@ -939,6 +956,16 @@ const TAFSIR_IDS = {
   'Al-Jalalayn':      74,
   'Maariful Quran':   168,
 };
+
+// Translation editions available
+const TRANSLATION_OPTIONS = [
+  {id: 'en.pickthall', name: 'Muhammad Marmaduke Pickthall'},
+  {id: 'en.yusufali', name: 'Yusuf Ali'},
+  {id: 'en.shakir', name: 'Muhammad Habib Shakir'},
+  {id: 'en.muhsin', name: 'Muhsin Khan'},
+  {id: 'en.hilali', name: 'Hilali & Khan'},
+  {id: 'en.fathimy', name: 'Fateh Muhammad Jalandhry'},
+];
 
 // ═══════════════════════════════════════════════════════
 //  THEME + FONT
@@ -952,9 +979,17 @@ function setTheme(name, btn) {
 }
 
 function setFontSize(val) {
+  val = Math.max(14, Math.min(32, parseInt(val)));
   document.documentElement.style.setProperty('--base-font', val+'px');
   document.getElementById('fontSizeLabel').textContent = val;
+  document.getElementById('fontSlider').value = val;
   try { localStorage.setItem('noor_fontsize', val); } catch(e){}
+}
+
+function adjustFontSize(delta) {
+  const slider = document.getElementById('fontSlider');
+  const newVal = Math.max(14, Math.min(32, parseInt(slider.value) + delta));
+  setFontSize(newVal);
 }
 
 function loadPrefs() {
@@ -997,7 +1032,7 @@ function handleGlobalSearch(e) {
 
 // ═══════════════════════════════════════════════════════
 //  FEATURE TOGGLES
-// ═══════════════════════════════════════════════════════
+// ═══���═══════════════════════════════════════════════════
 function toggleFeat(feat) {
   S.features[feat] = !S.features[feat];
   document.getElementById('chip-'+feat).classList.toggle('on', S.features[feat]);
@@ -1132,6 +1167,10 @@ function renderVerse(v,t,tl,idx) {
         onclick="toggleTafsir(${idx},${S.currentSurah.number},${v.numberInSurah})">
         ${tafsirOpen?'↑ Tafsir':'↓ Tafsir'}
       </button>
+      <button class="tafsir-btn" style="display:inline-block"
+        onclick="openScholarLink(${S.currentSurah.number},${v.numberInSurah})" title="View explanation by authentic scholars">
+        📺 Scholar
+      </button>
       <div class="audio-wave"><span style="height:4px"></span><span style="height:8px"></span><span style="height:12px"></span><span style="height:6px"></span></div>
     </div>
     <div class="tafsir-panel ${tafsirOpen?'open':''}" id="tafsir-${idx}">
@@ -1150,6 +1189,7 @@ async function toggleTafsir(idx, surahNum, verseNum) {
   const panel = document.getElementById(`tafsir-${idx}`);
   const btn   = document.querySelector(`#vc-${idx} .tafsir-btn`);
   if (panel.classList.contains('open')) {
+    S.tafsirScrollPos[idx] = panel.scrollTop;
     panel.classList.remove('open');
     if (btn) btn.textContent = '↓ Tafsir';
     delete S.openTafsirs[idx];
@@ -1165,6 +1205,12 @@ async function toggleTafsir(idx, surahNum, verseNum) {
   } else {
     document.getElementById(`tafsir-body-${idx}`).textContent = S.tafsirSources[idx]['Ibn Kathir'];
   }
+  // Restore scroll position if available
+  setTimeout(() => {
+    if (S.tafsirScrollPos[idx]) {
+      panel.scrollTop = S.tafsirScrollPos[idx];
+    }
+  }, 50);
 }
 
 async function switchTafsirSource(idx, surahNum, verseNum, sourceName, btn) {
@@ -1217,6 +1263,24 @@ async function fetchTafsir(idx, surahNum, verseNum, sourceName) {
   if (!S.tafsirSources[idx]) S.tafsirSources[idx] = {};
   S.tafsirSources[idx][sourceName] = text;
   if (body) body.textContent = text;
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCHOLAR RESOURCES
+// ═══════════════════════════════════════════════════════
+function openScholarLink(surahNum, verseNum) {
+  // Links to authentic scholars explaining Quranic verses
+  const scholarsAndLinks = {
+    // Famous authentic scholars and their channels
+    'Nouman Ali Khan': `https://www.youtube.com/results?search_query=Nouman+Ali+Khan+Quran+${surahNum}:${verseNum}`,
+    'Abdulbary Yahya': `https://www.youtube.com/results?search_query=Abdulbary+Yahya+Surah+${surahNum}+verse+${verseNum}`,
+    'Taimiyyah Zubair': `https://www.youtube.com/results?search_query=Taimiyyah+Zubair+Quran+${surahNum}:${verseNum}`,
+  };
+  
+  // Use the first scholar link or create a general Quran search
+  const scholarUrl = `https://www.youtube.com/results?search_query=Islamic+scholar+explanation+Quran+${surahNum}:${verseNum}`;
+  
+  window.open(scholarUrl, '_blank');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1289,6 +1353,21 @@ async function searchQuran() {
   const q = document.getElementById('quranSearchInput').value.trim();
   const out = document.getElementById('quran-search-results');
   if (!q) return;
+  
+  // Check for numeric format (surah:verse)
+  const numericMatch = q.match(/^(\d+):(\d+)$/);
+  if (numericMatch) {
+    const surah = parseInt(numericMatch[1]);
+    const verse = parseInt(numericMatch[2]);
+    if (surah >= 1 && surah <= 114) {
+      goToVerse(surah, verse);
+      out.innerHTML = `<div class="search-result" onclick="goToVerse(${surah},${verse})">
+        <div class="ref" style="cursor:pointer">Navigate to Surah ${surah}, Verse ${verse}</div>
+      </div>`;
+      return;
+    }
+  }
+  
   out.innerHTML='<div class="loader"><div class="spinner"></div>Searching…</div>';
   try {
     const d = await (await fetch(`${API}/search/${encodeURIComponent(q)}/all/en`)).json();
@@ -1310,6 +1389,19 @@ async function goToVerse(surahNum, verseNum) {
   showSection('quran');
   await loadSurah();
   setTimeout(()=>{ const c=document.getElementById('vc-'+(verseNum-1)); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); }, 700);
+}
+
+async function loadRandomVerse() {
+  const randomSurah = Math.floor(Math.random() * 114) + 1;
+  document.getElementById('surahSelect').value = randomSurah;
+  showSection('quran');
+  await loadSurah();
+  setTimeout(() => {
+    const verseCount = S.verses.length;
+    const randomVerse = Math.floor(Math.random() * verseCount);
+    const card = document.getElementById('vc-' + randomVerse);
+    if (card) card.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }, 700);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1391,7 +1483,7 @@ const CURATED = [
   {text:"Two phrases are dear to the Most Merciful, light on the tongue, and heavy on the Scale: SubhanAllahi wa bihamdihi, SubhanAllahil-Azim.",arabic:"كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ",source:"Bukhari 6682",grade:"Sahih",category:"dhikr"},
   {text:"Remember Allah often, for it is a light for your heart.",arabic:"أَكْثِرُوا ذِكْرَ اللَّهِ فَإِنَّهُ نُورٌ",source:"Various",grade:"Hasan",category:"dhikr"},
   {text:"Remember death often, for it demolishes pleasures and reminds of what lies ahead.",arabic:"أَكْثِرُوا ذِكْرَ هَاذِمِ اللَّذَّاتِ الْمَوْتَ",source:"Tirmidhi 2307",grade:"Hasan",category:"death"},
-  {text:"Be in this world as if you were a stranger or a traveler.",arabic:"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ",source:"Bukhari 6416",grade:"Sahih",category:"death"},
+  {text:"Be in this world as if you were a stranger or a traveler.",arabic:"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيب�� أَوْ عَابِرُ سَبِيلٍ",source:"Bukhari 6416",grade:"Sahih",category:"death"},
   {text:"Cleanliness is half of faith.",arabic:"الطَّهُورُ شَطْرُ الإِيمَانِ",source:"Muslim 223",grade:"Sahih",category:"purification"},
   {text:"The key to prayer is purification, its opening is takbir, and its closing is taslim.",arabic:"مِفْتَاحُ الصَّلاةِ الطَّهُورُ",source:"Tirmidhi 3",grade:"Sahih",category:"purification"},
   {text:"The halal is clear and the haram is clear, and between them are matters that are doubtful. Whoever avoids the doubtful has preserved his religion.",arabic:"الْحَلالُ بَيِّنٌ وَالْحَرَامُ بَيِّنٌ",source:"Bukhari 52",grade:"Sahih",category:"trade"},
@@ -1738,6 +1830,30 @@ function renderFeed() {
 }
 
 // ═══════════════════════════════════════════════════════
+//  URL NAVIGATION
+// ═══════════════════════════════════════════════════════
+function handleURLNavigation() {
+  const params = new URLSearchParams(window.location.search);
+  const surah = params.get('surah');
+  const verse = params.get('verse');
+  
+  if (surah && !isNaN(surah)) {
+    setTimeout(async () => {
+      document.getElementById('surahSelect').value = surah;
+      showSection('quran');
+      await loadSurah();
+      if (verse && !isNaN(verse)) {
+        const idx = parseInt(verse) - 1;
+        setTimeout(() => {
+          const card = document.getElementById('vc-' + idx);
+          if (card) card.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }, 500);
+      }
+    }, 300);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 loadPrefs();
@@ -1746,6 +1862,7 @@ loadPosts();
 loadSurahList();
 loadHadiths();
 buildChapterList('bukhari');
+handleURLNavigation();
 </script>
 </body>
 </html>
