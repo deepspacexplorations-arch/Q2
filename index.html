@@ -1072,7 +1072,7 @@ async function loadSurah() {
   if (!num) return;
   const trans = document.getElementById('translationSelect').value;
   document.getElementById('quran-content').innerHTML = '<div class="loader"><div class="spinner"></div>Loading…</div>';
-  S.transliteration = []; S.openTafsirs = {}; S.tafsirSources = {};
+  S.transliteration = []; S.wordTranslit = []; S.openTafsirs = {}; S.tafsirSources = {}; S.tafsirScrollPos = {};
 
   try {
     const [ar, tr] = await Promise.all([
@@ -1348,7 +1348,7 @@ function seekAudio(e) {
 
 // ═══════════════════════════════════════════════════════
 //  QURAN SEARCH
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════���═══════════
 async function searchQuran() {
   const q = document.getElementById('quranSearchInput').value.trim();
   const out = document.getElementById('quran-search-results');
@@ -1856,13 +1856,21 @@ function handleURLNavigation() {
 // ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
-loadPrefs();
-loadBookmarks();
-loadPosts();
-loadSurahList();
-loadHadiths();
-buildChapterList('bukhari');
-handleURLNavigation();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
+
+async function initApp() {
+  loadPrefs();
+  loadBookmarks();
+  loadPosts();
+  await loadSurahList();
+  loadHadiths();
+  buildChapterList('bukhari');
+  handleURLNavigation();
+}
 </script>
 </body>
 </html>
