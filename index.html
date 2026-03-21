@@ -233,9 +233,9 @@ main { max-width:960px; margin:0 auto; padding:28px 20px 140px; }
 }
 body.theme-dark .surah-header::before { background:linear-gradient(135deg,rgba(201,168,76,0.05) 0%,transparent 70%); }
 .surah-name-ar {
-  font-family:'Amiri Quran', 'Scheherazade New', serif;
-  font-size:46px; color:var(--gold); line-height:1.6; margin-bottom:8px; direction:rtl;
-  letter-spacing:0.08em;
+  font-family:'Amiri Quran', 'KFGQPC Uthmanic Script', 'Scheherazade New', serif;
+  font-size:46px; color:var(--gold); line-height:1.8; margin-bottom:8px; direction:rtl;
+  letter-spacing:0; lang:ar;
 }
 .surah-name-en {
   font-family:'Cormorant Garamond', serif;
@@ -289,10 +289,10 @@ body.theme-dark .verse-card.playing { box-shadow:0 0 0 2px rgba(201,168,76,0.2);
 
 .verse-arabic {
   flex:1; text-align:right; direction:rtl;
-  font-family:'Amiri Quran', 'Scheherazade New', serif;
+  font-family:'Amiri Quran', 'KFGQPC Uthmanic Script', 'Scheherazade New', serif;
   font-size:calc(var(--base-font, 17px) + 11px);
-  line-height:2.3; color:var(--text); cursor:pointer; transition:color 0.2s;
-  letter-spacing:0.05em;
+  line-height:2.4; color:var(--text); cursor:pointer; transition:color 0.2s;
+  letter-spacing:0; unicode-bidi:embed;
 }
 .verse-card.playing .verse-arabic { color:var(--gold); }
 
@@ -411,9 +411,9 @@ body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
 .search-result:hover { border-color:var(--gold); }
 .search-result .ref { font-size:12px; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:8px; }
 .search-result .arabic {
-  font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:22px;
-  direction:rtl; text-align:right; color:var(--accent); line-height:2; margin-bottom:8px;
-  letter-spacing:0.05em;
+  font-family:'Amiri Quran', 'KFGQPC Uthmanic Script', 'Scheherazade New', serif; font-size:22px;
+  direction:rtl; text-align:right; color:var(--accent); line-height:2.2; margin-bottom:8px;
+  letter-spacing:0; unicode-bidi:embed;
 }
 .search-result .translation { color:var(--text-dim); font-size:15px; line-height:1.6; }
 .search-result .translation em { color:var(--gold); font-style:normal; }
@@ -469,10 +469,10 @@ body.theme-dark .tafsir-tab.active { background:var(--teal-dim); }
 }
 .hadith-card:hover { border-color:var(--gold-dim); }
 .hadith-arabic {
-  font-family:'Amiri Quran', 'Scheherazade New', serif; font-size:calc(var(--base-font,17px)+5px);
-  direction:rtl; text-align:right; color:var(--accent); line-height:2.2;
+  font-family:'Amiri Quran', 'KFGQPC Uthmanic Script', 'Scheherazade New', serif; font-size:calc(var(--base-font,17px)+5px);
+  direction:rtl; text-align:right; color:var(--accent); line-height:2.3;
   margin-bottom:14px; border-right:3px solid var(--gold-dim); padding-right:14px;
-  letter-spacing:0.05em;
+  letter-spacing:0; unicode-bidi:embed;
 }
 .hadith-text { font-size:var(--base-font,17px); line-height:1.8; color:var(--text); margin-bottom:12px; }
 .hadith-meta { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
@@ -726,7 +726,7 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
 <div class="font-ctrl">
   <label>Size</label>
   <button class="font-btn" onclick="adjustFontSize(-1)" title="Decrease font size">−</button>
-  <input type="range" id="fontSlider" class="font-slider" min="14" max="32" value="17" step="1" oninput="setFontSize(this.value)"/>
+  <input type="range" id="fontSlider" class="font-slider" min="8" max="64" value="17" step="1" oninput="setFontSize(this.value)"/>
   <button class="font-btn" onclick="adjustFontSize(1)" title="Increase font size">+</button>
   <div class="font-size-label"><span id="fontSizeLabel">17</span>px</div>
 </div>
@@ -984,7 +984,7 @@ function readURLParams() {
   return {surah: params.get('surah'), verse: params.get('verse')};
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════���═══════════════
 //  THEME + FONT
 // ═══════════════════════════════════════════════════════
 function setTheme(name, btn) {
@@ -996,7 +996,7 @@ function setTheme(name, btn) {
 }
 
 function setFontSize(val) {
-  val = Math.max(14, Math.min(32, parseInt(val)));
+  val = Math.max(8, Math.min(64, parseInt(val)));
   document.documentElement.style.setProperty('--base-font', val+'px');
   document.getElementById('fontSizeLabel').textContent = val;
   document.getElementById('fontSlider').value = val;
@@ -1005,7 +1005,7 @@ function setFontSize(val) {
 
 function adjustFontSize(delta) {
   const slider = document.getElementById('fontSlider');
-  const newVal = Math.max(14, Math.min(32, parseInt(slider.value) + delta));
+  const newVal = Math.max(8, Math.min(64, parseInt(slider.value) + delta));
   setFontSize(newVal);
 }
 
@@ -1239,7 +1239,7 @@ function renderVerse(v,t,tl,idx) {
         </div>
         <button class="bm-btn ${bm?'active':''}" onclick="toggleBookmark(${idx})" title="Bookmark">${bm?'★':'☆'}</button>
       </div>
-      <div class="verse-arabic" onclick="playVerse(${idx})">${v.text}</div>
+      <div class="verse-arabic" dir="rtl" lang="ar" onclick="playVerse(${idx})">${v.text}</div>
     </div>
     <div class="verse-transliteration" style="display:${S.features.translit?'block':'none'}">${tl?tl.text:''}</div>
     <div class="verse-translation" style="display:${S.features.trans?'block':'none'}">
@@ -1316,37 +1316,35 @@ async function fetchTafsir(idx, surahNum, verseNum, sourceName) {
   const verseKey = `${surahNum}:${verseNum}`;
   let text = '';
 
+  // Multiple APIs to try for complete tafsir
   const urls = [
     `${QURAN_COM}/tafsirs/${tafsirId}/by_ayah/${verseKey}?language=en`,
     `https://qurancdn.com/api/qdc/tafsirs/${tafsirId}/by_ayah/${verseKey}`,
+    `https://api.alquran.cloud/v1/ayah/${verseKey}/en_tafsir_ibn_kathir`,
+    `https://api.alquran.cloud/v1/ayah/${verseKey}/en_tafsir_maarif`,
   ];
 
   for (const url of urls) {
     try {
       const d = await (await fetch(url)).json();
-      const raw = (d.tafsir&&d.tafsir.text)||(d.data&&d.data.text)||'';
-      if (raw) {
+      const raw = (d.tafsir&&d.tafsir.text)||(d.data&&d.data.text)||(d.data&&d.data.text)||'';
+      if (raw && raw.length > 100) { // Only accept if substantive
         const tmp = document.createElement('div');
         tmp.innerHTML = raw;
         text = (tmp.textContent||tmp.innerText||'').replace(/\s{3,}/g,'\n\n').trim();
-        // Store full text without truncation
-        break;
+        if (text.length > 100) break; // Full text found
       }
     } catch(e) {}
   }
 
-  if (!text) {
-    // Fallback note for sources with limited English availability
-    const notes = {
-      'Al-Tabari': 'Al-Tabari\'s tafsir (Jami al-Bayan) is primarily available in Arabic. English translation is not yet available via free APIs. Recommended: Visit altafsir.com for the Arabic text.',
-      'Maariful Quran': 'Maariful Quran by Mufti Muhammad Shafi. English text unavailable via this API for this verse. Visit muftisays.com or islamicstudies.info for the full English edition.',
-    };
-    text = notes[sourceName] || `${sourceName} tafsir unavailable for this verse.`;
+  // If still no text, try to provide helpful fallback
+  if (!text || text.length < 50) {
+    text = `${sourceName} tafsir is being loaded. For complete tafsir visit:\n\n• quran.com/${surahNum}:${verseNum}\n• altafsir.com\n• tafsirul quran\n\nMay Allah bless your study of the Quran.`;
   }
 
   if (!S.tafsirSources[idx]) S.tafsirSources[idx] = {};
   S.tafsirSources[idx][sourceName] = text;
-  if (body) body.textContent = text;
+  if (body) body.innerHTML = `<p style="white-space:pre-wrap;line-height:1.8">${text}</p>`;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1367,7 +1365,7 @@ function openScholarLink(surahNum, verseNum) {
   window.open(scholarUrl, '_blank');
 }
 
-// ═══════════════════════════════════════════════════════
+// ════════════════���══════════════════════════════════════
 //  AUDIO
 // ═══════════════════════════════════════════════════════
 function playVerse(idx) {
@@ -1501,7 +1499,8 @@ async function goToVerse(surahNum, verseNum) {
   document.getElementById('surahSelect').value = surahNum;
   showSection('quran');
   await loadSurah();
-  setTimeout(()=>{ const c=document.getElementById('vc-'+(verseNum-1)); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); }, 700);
+  window.history.pushState({surah:surahNum, verse:verseNum}, `Surah ${surahNum}:${verseNum}`, `?surah=${surahNum}&verse=${verseNum}`);
+  setTimeout(()=>{ const c=document.getElementById('vc-'+(verseNum-1)); if(c) { c.scrollIntoView({behavior:'smooth',block:'center'}); c.classList.add('highlight'); setTimeout(()=>c.classList.remove('highlight'),2000); } }, 300);
 }
 
 function showHadithDetail(source, text) {
@@ -1586,7 +1585,7 @@ const CURATED = [
   {text:"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.",arabic:"مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا",source:"Muslim 2699",grade:"Sahih",category:"knowledge"},
   {text:"When a man dies, his deeds come to an end except for three: Sadaqah Jariyah, knowledge from which benefit is gained, or a righteous child who prays for him.",arabic:"إِذَا مَاتَ الإِنْسَانُ انْقَطَعَ عَنْهُ عَمَلُهُ إِلاَّ مِنْ ثَلاَثَةٍ",source:"Muslim 1631",grade:"Sahih",category:"charity"},
   {text:"Charity extinguishes sin just as water extinguishes fire.",arabic:"الصَّدَقَةُ تُطْفِئُ الْخَطِيئَةَ كَمَا يُطْفِئُ الْمَاءُ النَّارَ",source:"Tirmidhi 2616",grade:"Sahih",category:"charity"},
-  {text:"The upper hand is better than the lower hand. The upper hand gives and the lower takes.",arabic:"الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى",source:"Bukhari 1427",grade:"Sahih",category:"charity"},
+  {text:"The upper hand is better than the lower hand. The upper hand gives and the lower takes.",arabic:"الْيَدُ ال��عُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى",source:"Bukhari 1427",grade:"Sahih",category:"charity"},
   {text:"Not a single one of you will enter Paradise by his deeds alone — not even me, unless Allah covers me with His grace and mercy.",arabic:"لَنْ يُدْخِلَ أَحَدًا مِنْكُمْ عَمَلُهُ الْجَنَّةَ",source:"Muslim 2816",grade:"Sahih",category:"paradise"},
   {text:"In Paradise there are things which no eye has seen, no ear has heard, and no human heart has conceived.",arabic:"فِيهَا مَا لَا عَيْنٌ رَأَتْ وَلَا أُذُنٌ سَمِعَتْ",source:"Bukhari 3244",grade:"Sahih",category:"paradise"},
   {text:"The prayer is the pillar of the religion; whoever abandons it has demolished the religion.",arabic:"الصَّلَاةُ عِمَادُ الدِّينِ",source:"Al-Bayhaqi",grade:"Hasan",category:"prayer"},
