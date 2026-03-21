@@ -253,10 +253,12 @@ body.theme-dark .surah-header::before { background:linear-gradient(135deg,rgba(2
    VERSE CARD
 ═══════════════════════════════════════════ */
 .verse-card {
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--radius); margin-bottom:10px;
-  transition:border-color 0.2s, box-shadow 0.2s;
-  overflow:hidden; box-shadow:var(--card-shadow);
+  margin:14px auto; padding:16px; background:var(--surface);
+  border:1px solid var(--border); border-radius:10px;
+  box-shadow:var(--card-shadow); transition:all 0.3s;
+}
+.verse-card.highlight {
+  background:var(--surface2); border-color:var(--gold); box-shadow:0 0 0 3px rgba(42,124,111,0.15);
 }
 .verse-card:hover { border-color:var(--gold-dim); box-shadow:0 4px 20px rgba(42,124,111,0.12); }
 .verse-card.playing { border-color:var(--gold); box-shadow:0 0 0 2px rgba(42,124,111,0.15); }
@@ -339,7 +341,7 @@ body.theme-dark .verse-card.playing { box-shadow:0 0 0 2px rgba(201,168,76,0.2);
   display:none; margin:0 16px 14px 62px;
   background:var(--surface2); border:1px solid var(--border);
   border-left:3px solid var(--teal); border-radius:10px; padding:16px;
-  position:sticky; top:100px; z-index:50; max-height:70vh; overflow-y:auto;
+  position:sticky; top:100px; z-index:50; max-height:60vh; overflow-y:auto;
 }
 .tafsir-panel.open { display:block; animation:fadeUp 0.2s ease; }
 .tafsir-source-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
@@ -968,6 +970,21 @@ const TRANSLATION_OPTIONS = [
 ];
 
 // ═══════════════════════════════════════════════════════
+//  URL NAVIGATION
+// ═══════════════════════════════════════════════════════
+function updateURL(surah, verse) {
+  if (surah && verse) {
+    window.history.pushState({surah, verse}, `Surah ${surah}:${verse}`, `?surah=${surah}&verse=${verse}`);
+    document.title = `Surah ${surah}:${verse} — Noor Quran & Sunnah`;
+  }
+}
+
+function readURLParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {surah: params.get('surah'), verse: params.get('verse')};
+}
+
+// ═══════════════════════════════════════════════════════
 //  THEME + FONT
 // ═══════════════════════════════════════════════════════
 function setTheme(name, btn) {
@@ -1001,6 +1018,15 @@ function loadPrefs() {
     const slider = document.getElementById('fontSlider');
     slider.value = fs;
     setFontSize(fs);
+    
+    // Restore last surah if no URL params
+    const {surah} = readURLParams();
+    if (!surah) {
+      const lastSurah = localStorage.getItem('noor_lastSurah');
+      if (lastSurah) {
+        document.getElementById('surahSelect').value = lastSurah;
+      }
+    }
   } catch(e){}
 }
 
@@ -1024,6 +1050,30 @@ function handleGlobalSearch(e) {
   if (e.key !== 'Enter') return;
   const q = e.target.value.trim();
   if (!q) return;
+  
+  // Check for numeric format (surah:verse)
+  const numMatch = q.match(/^(\d+):(\d+)$/);
+  if (numMatch) {
+    const surah = parseInt(numMatch[1]);
+    const verse = parseInt(numMatch[2]);
+    if (surah >= 1 && surah <= 114) {
+      e.target.value = '';
+      document.getElementById('surahSelect').value = surah;
+      showSection('quran');
+      loadSurah(surah).then(() => {
+        const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-verse="${verse}"]`);
+        if (card) {
+          setTimeout(() => {
+            card.scrollIntoView({behavior: 'smooth', block: 'center'});
+            card.classList.add('highlight');
+            setTimeout(() => card.classList.remove('highlight'), 2000);
+          }, 200);
+        }
+      });
+      return;
+    }
+  }
+  
   document.getElementById('quranSearchInput').value = q;
   e.target.value = '';
   showSection('search');
@@ -1082,8 +1132,8 @@ async function loadSurahList() {
 // ═══════════════════════════════════════════════════════
 //  LOAD SURAH
 // ═══════════════════════════════════════════════════════
-async function loadSurah() {
-  const num = document.getElementById('surahSelect').value;
+async function loadSurah(surahOverride = null) {
+  let num = surahOverride || document.getElementById('surahSelect').value;
   if (!num) return;
   const trans = document.getElementById('translationSelect').value;
   document.getElementById('quran-content').innerHTML = '<div class="loader"><div class="spinner"></div>Loading…</div>';
@@ -1101,6 +1151,8 @@ async function loadSurah() {
     S.verses.forEach((v,i) => { if(v.ruku!==lastR){ lastR=v.ruku; S.rukus.push({ruku:v.ruku,startIdx:i}); }});
     renderSurah();
     if (S.features.translit) loadTransliteration();
+    // Save current surah to localStorage
+    try { localStorage.setItem('noor_lastSurah', num); } catch(e){}
   } catch(e) {
     document.getElementById('quran-content').innerHTML = '<div class="empty"><div class="big">⚠</div><div>Failed to load. Check connection.</div></div>';
   }
@@ -1122,6 +1174,22 @@ function setView(v) {
   ['verse','ruku','full'].forEach(k => document.getElementById('btn-'+k).classList.toggle('active',k===v));
   if (S.currentSurah) renderSurah();
 }
+
+// Scroll listener to update URL when viewing a verse
+document.addEventListener('scroll', () => {
+  if (!S.currentSurah) return;
+  const verseCards = document.querySelectorAll('.verse-card[data-surah][data-verse]');
+  let inViewVerse = null;
+  verseCards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    if (rect.top >= 0 && rect.top <= 300) {
+      inViewVerse = {surah: card.dataset.surah, verse: card.dataset.verse};
+    }
+  });
+  if (inViewVerse) {
+    updateURL(inViewVerse.surah, inViewVerse.verse);
+  }
+}, {passive: true});
 
 // ═══════════════════════════════════════════════════════
 //  RENDER SURAH
@@ -1160,12 +1228,13 @@ function renderVerse(v,t,tl,idx) {
   const bm = isBookmarked(S.currentSurah.number,v.numberInSurah);
   const tafsirOpen = S.openTafsirs[idx]!==undefined;
   const transName = document.getElementById('translationSelect').selectedOptions[0].text;
+  const verseRef = `${S.currentSurah.number}:${v.numberInSurah}`;
 
-  return `<div class="verse-card ${playing?'playing':''} ${rs?'ruku-start':''} ${bm?'bookmarked':''}" id="vc-${idx}">
+  return `<div class="verse-card ${playing?'playing':''} ${rs?'ruku-start':''} ${bm?'bookmarked':''}" id="vc-${idx}" data-surah="${S.currentSurah.number}" data-verse="${v.numberInSurah}">
     <div class="verse-top">
       <div class="verse-actions">
-        <div class="verse-number ${playing?'playing':''}" onclick="playVerse(${idx})" title="Play">
-          <span class="num-text">${v.numberInSurah}</span>
+        <div class="verse-number ${playing?'playing':''}" onclick="playVerse(${idx})" title="Play verse ${verseRef}">
+          <span class="num-text">${verseRef}</span>
           <span class="play-icon">▶</span>
         </div>
         <button class="bm-btn ${bm?'active':''}" onclick="toggleBookmark(${idx})" title="Bookmark">${bm?'★':'☆'}</button>
@@ -1528,7 +1597,7 @@ const CURATED = [
   {text:"The best of you are those who are best to their wives.",arabic:"خَيْرُكُمْ خَيْرُكُمْ لِأَهْلِهِ",source:"Tirmidhi 3895",grade:"Sahih",category:"marriage"},
   {text:"Marriage is part of my sunnah, and whoever does not follow my sunnah has nothing to do with me.",arabic:"النِّكَاحُ مِنْ سُنَّتِي",source:"Ibn Majah 1846",grade:"Sahih",category:"marriage"},
   {text:"SubhanAllahi wa bihamdihi — whoever says this one hundred times a day will have his sins forgiven even if they were like the foam of the sea.",arabic:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",source:"Bukhari 6405",grade:"Sahih",category:"dhikr"},
-  {text:"Two phrases are dear to the Most Merciful, light on the tongue, and heavy on the Scale: SubhanAllahi wa bihamdihi, SubhanAllahil-Azim.",arabic:"كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ",source:"Bukhari 6682",grade:"Sahih",category:"dhikr"},
+  {text:"Two phrases are dear to the Most Merciful, light on the tongue, and heavy on the Scale: SubhanAllahi wa bihamdihi, SubhanAllahil-Azim.",arabic:"كَلِمَ��َانِ خَفِيفَتَانِ عَلَى اللِّسَانِ",source:"Bukhari 6682",grade:"Sahih",category:"dhikr"},
   {text:"Remember Allah often, for it is a light for your heart.",arabic:"أَكْثِرُوا ذِكْرَ اللَّهِ فَإِنَّهُ نُورٌ",source:"Various",grade:"Hasan",category:"dhikr"},
   {text:"Remember death often, for it demolishes pleasures and reminds of what lies ahead.",arabic:"أَكْثِرُوا ذِكْرَ هَاذِمِ اللَّذَّاتِ الْمَوْتَ",source:"Tirmidhi 2307",grade:"Hasan",category:"death"},
   {text:"Be in this world as if you were a stranger or a traveler.",arabic:"كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيب�� أَوْ عَابِرُ سَبِيلٍ",source:"Bukhari 6416",grade:"Sahih",category:"death"},
@@ -1881,29 +1950,30 @@ function renderFeed() {
 //  URL NAVIGATION
 // ═══════════════════════════════════════════════════════
 function handleURLNavigation() {
-  const params = new URLSearchParams(window.location.search);
-  const surah = params.get('surah');
-  const verse = params.get('verse');
+  const {surah, verse} = readURLParams();
   
   if (surah && !isNaN(surah)) {
     setTimeout(async () => {
       document.getElementById('surahSelect').value = surah;
       showSection('quran');
-      await loadSurah();
+      await loadSurah(surah);
       if (verse && !isNaN(verse)) {
-        const idx = parseInt(verse) - 1;
         setTimeout(() => {
-          const card = document.getElementById('vc-' + idx);
-          if (card) card.scrollIntoView({behavior: 'smooth', block: 'center'});
-        }, 500);
+          const card = document.querySelector(`.verse-card[data-surah="${surah}"][data-verse="${verse}"]`);
+          if (card) {
+            card.scrollIntoView({behavior: 'smooth', block: 'center'});
+            card.classList.add('highlight');
+            setTimeout(() => card.classList.remove('highlight'), 2000);
+          }
+        }, 300);
       }
-    }, 300);
+    }, 100);
   }
 }
 
 // ═══════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════���═
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {
@@ -1917,13 +1987,16 @@ async function initApp() {
   await loadSurahList();
   loadHadiths();
   buildChapterList('bukhari');
-  // Auto-load first surah
-  setTimeout(() => {
-    if (document.getElementById('surahSelect').value) {
-      loadSurah();
+  
+  const {surah, verse} = readURLParams();
+  setTimeout(async () => {
+    if (surah) {
+      handleURLNavigation();
+    } else if (document.getElementById('surahSelect').value) {
+      // Load first surah by default
+      await loadSurah();
     }
-  }, 100);
-  handleURLNavigation();
+  }, 150);
 }
 </script>
 </body>
