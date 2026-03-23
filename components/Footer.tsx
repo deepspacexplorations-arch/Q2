@@ -18,7 +18,6 @@ export default function Footer() {
             <li><Link href="/quran">Quran</Link></li>
             <li><Link href="/sunnah">Sunnah</Link></li>
             <li><Link href="/videos">Scholars</Link></li>
-            <li><Link href="/about">About</Link></li>
           </ul>
         </div>
 

@@ -34,9 +34,6 @@ export default function Navigation({ menuOpen, setMenuOpen }: NavigationProps) {
           <Link href="/videos" className={styles.menuItem}>
             Scholars
           </Link>
-          <Link href="/about" className={styles.menuItem}>
-            About
-          </Link>
         </div>
       </div>
     </nav>
