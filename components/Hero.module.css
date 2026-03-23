@@ -1,0 +1,192 @@
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--primary) 100%);
+  color: var(--text-light);
+  padding: 2rem 1rem;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(201, 154, 110, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(26, 71, 42, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+.quranic {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: rgba(201, 154, 110, 0.1);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+}
+
+.arabicText {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem;
+  line-height: 2;
+  color: var(--accent-light);
+  margin-bottom: 1rem;
+  direction: rtl;
+  unicode-bidi: embed;
+  letter-spacing: 0;
+}
+
+.translation {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.reference {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.title {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.noor {
+  font-family: 'Amiri', serif;
+  font-size: 5rem;
+  color: var(--accent-light);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 1.8rem;
+  color: var(--text-light);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.8;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.vision {
+  background: rgba(201, 154, 110, 0.05);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 3rem;
+  border: 1px solid rgba(201, 154, 110, 0.2);
+}
+
+.vision h2 {
+  color: var(--accent-light);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.vision p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.taqwaDef {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201, 154, 110, 0.3);
+  font-style: italic;
+  color: var(--accent-light);
+}
+
+.cta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  background: var(--accent);
+  color: var(--primary);
+  box-shadow: 0 4px 15px rgba(201, 154, 110, 0.3);
+}
+
+.btn:hover {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 154, 110, 0.4);
+}
+
+.secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: none;
+}
+
+.secondary:hover {
+  background: rgba(201, 154, 110, 0.1);
+  border-color: var(--accent-light);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    padding: 4rem 1rem;
+  }
+
+  .noor {
+    font-size: 3.5rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .arabicText {
+    font-size: 1.2rem;
+  }
+
+  .cta {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
