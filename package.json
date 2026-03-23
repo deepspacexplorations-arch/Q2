@@ -1,0 +1,13 @@
+{
+  "name": "noor-quran-sunnah",
+  "version": "2.1.0",
+  "description": "Noor - Quran & Sunnah Reading Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["quran", "sunnah", "hadith", "islamic"],
+  "author": "Noor",
+  "license": "MIT"
+}
