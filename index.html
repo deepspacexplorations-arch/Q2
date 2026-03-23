@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Noor — Quran & Sunnah</title>
+<title>Noor — Quran & Sunnah v2.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Scheherazade+New:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet"/>
@@ -710,7 +710,11 @@ body.theme-dark .like-btn:hover, body.theme-dark .like-btn.liked { background:rg
   <div class="header-right">
     <div class="global-search">
       <span style="color:var(--text-faint);font-size:13px">⌕</span>
-      <input type="text" placeholder="Search Quran…" id="globalSearch" onkeydown="handleGlobalSearch(event)" aria-label="Search Quran"/>
+      <input type="text" placeholder="Search Quran, Sunnah, keywords, surah names…" id="globalSearch" onkeydown="handleGlobalSearch(event)" aria-label="Search"/>
+      <div style="display:flex; gap:6px; font-size:12px; margin-left:8px;">
+        <label><input type="checkbox" id="searchQuran" checked/> Quran</label>
+        <label><input type="checkbox" id="searchSunnah" checked/> Sunnah</label>
+      </div>
     </div>
   </div>
 </header>
@@ -974,14 +978,14 @@ const TRANSLATION_OPTIONS = [
 // ═══════════════════════════════════════════════════════
 function updateURL(surah, verse) {
   if (surah && verse) {
-    window.history.pushState({surah, verse}, `Surah ${surah}:${verse}`, `?surah=${surah}&verse=${verse}`);
+    window.history.pushState({surah, verse}, `Surah ${surah}:${verse}`, `/?sura=${surah}&verse=${verse}`);
     document.title = `Surah ${surah}:${verse} — Noor Quran & Sunnah`;
   }
 }
 
 function readURLParams() {
   const params = new URLSearchParams(window.location.search);
-  return {surah: params.get('surah'), verse: params.get('verse')};
+  return {surah: params.get('sura') || params.get('surah'), verse: params.get('verse')};
 }
 
 // ═══════════════════════════════════════���═══════════════
@@ -1074,10 +1078,60 @@ function handleGlobalSearch(e) {
     }
   }
   
+  // Get search filter options
+  const searchQuran = document.getElementById('searchQuran')?.checked !== false;
+  const searchSunnah = document.getElementById('searchSunnah')?.checked !== false;
+  
   document.getElementById('quranSearchInput').value = q;
   e.target.value = '';
   showSection('search');
-  searchQuran();
+  
+  // Perform combined search
+  const out = document.getElementById('quran-search-results');
+  if (!q) return;
+  
+  out.innerHTML='<div class="loader"><div class="spinner"></div>Searching…</div>';
+  
+  let html = `<div style="font-size:13px;color:var(--text-faint);margin-bottom:14px">Search results for "<em style="color:var(--gold)">${q}</em>"</div>`;
+  let hasResults = false;
+  
+  // Search Quran if enabled
+  if (searchQuran) {
+    fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(q)}/all/en`)
+      .then(r => r.json())
+      .then(d => {
+        const matches = d.data?.matches || [];
+        if (matches.length) {
+          hasResults = true;
+          html += `<div style="font-size:12px;color:var(--text-faint);margin-top:10px;text-transform:uppercase;letter-spacing:0.08em">Quran (${matches.length} results)</div>`;
+          html += matches.slice(0,15).map(m=>`<div class="search-result" onclick="goToVerse(${m.surah.number},${m.numberInSurah})"><div class="ref">${m.surah.englishName} ${m.surah.number}:${m.numberInSurah}</div><div class="arabic" dir="rtl">${m.text}</div><div class="translation">${m.edition?.text || ''}</div></div>`).join('');
+        }
+        
+        // Search Sunnah if enabled
+        if (searchSunnah && S.hadithData) {
+          const hadithMatches = S.hadithData.filter(h => 
+            h.text.toLowerCase().includes(q.toLowerCase()) || 
+            h.category.toLowerCase().includes(q.toLowerCase())
+          ).slice(0, 10);
+          if (hadithMatches.length) {
+            hasResults = true;
+            html += `<div style="font-size:12px;color:var(--text-faint);margin-top:10px;text-transform:uppercase;letter-spacing:0.08em">Sunnah (${hadithMatches.length} results)</div>`;
+            html += hadithMatches.map(h=>`<div class="search-result"><div class="ref">${h.source} • ${h.category}</div><div class="arabic" dir="rtl">${h.arabic}</div><div class="translation">${h.text}</div></div>`).join('');
+          }
+        }
+        
+        out.innerHTML = html || '<div class="empty"><div class="big">○</div><div>No results found</div></div>';
+      })
+      .catch(e => { out.innerHTML='<div class="empty"><div class="big">⚠</div><div>Search failed</div></div>'; });
+  } else if (searchSunnah && S.hadithData) {
+    const hadithMatches = S.hadithData.filter(h => h.text.toLowerCase().includes(q.toLowerCase())).slice(0,15);
+    if (hadithMatches.length) {
+      html += hadithMatches.map(h=>`<div class="search-result"><div class="ref">${h.source} • ${h.category}</div><div class="translation">${h.text}</div></div>`).join('');
+      out.innerHTML = html;
+    } else {
+      out.innerHTML = '<div class="empty"><div class="big">○</div><div>No results found</div></div>';
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1499,7 +1553,7 @@ async function goToVerse(surahNum, verseNum) {
   document.getElementById('surahSelect').value = surahNum;
   showSection('quran');
   await loadSurah();
-  window.history.pushState({surah:surahNum, verse:verseNum}, `Surah ${surahNum}:${verseNum}`, `?surah=${surahNum}&verse=${verseNum}`);
+  window.history.pushState({surah:surahNum, verse:verseNum}, `Surah ${surahNum}:${verseNum}`, `/?sura=${surahNum}&verse=${verseNum}`);
   setTimeout(()=>{ const c=document.getElementById('vc-'+(verseNum-1)); if(c) { c.scrollIntoView({behavior:'smooth',block:'center'}); c.classList.add('highlight'); setTimeout(()=>c.classList.remove('highlight'),2000); } }, 300);
 }
 
@@ -1582,7 +1636,7 @@ const CURATED = [
   {text:"Whoever believes in Allah and the Last Day should say something good or remain silent.",arabic:"مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",source:"Bukhari 6018",grade:"Sahih",category:"manners"},
   {text:"The best of you are those who learn the Quran and teach it.",arabic:"خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",source:"Bukhari 5027",grade:"Sahih",category:"knowledge"},
   {text:"Seeking knowledge is an obligation upon every Muslim.",arabic:"طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ",source:"Ibn Majah 224",grade:"Sahih",category:"knowledge"},
-  {text:"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.",arabic:"مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا",source:"Muslim 2699",grade:"Sahih",category:"knowledge"},
+  {text:"Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.",arabic:"مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِ��ْمًا",source:"Muslim 2699",grade:"Sahih",category:"knowledge"},
   {text:"When a man dies, his deeds come to an end except for three: Sadaqah Jariyah, knowledge from which benefit is gained, or a righteous child who prays for him.",arabic:"إِذَا مَاتَ الإِنْسَانُ انْقَطَعَ عَنْهُ عَمَلُهُ إِلاَّ مِنْ ثَلاَثَةٍ",source:"Muslim 1631",grade:"Sahih",category:"charity"},
   {text:"Charity extinguishes sin just as water extinguishes fire.",arabic:"الصَّدَقَةُ تُطْفِئُ الْخَطِيئَةَ كَمَا يُطْفِئُ الْمَاءُ النَّارَ",source:"Tirmidhi 2616",grade:"Sahih",category:"charity"},
   {text:"The upper hand is better than the lower hand. The upper hand gives and the lower takes.",arabic:"الْيَدُ ال��عُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى",source:"Bukhari 1427",grade:"Sahih",category:"charity"},
