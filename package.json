@@ -2,7 +2,7 @@
   "name": "noor-quran-sunnah",
   "version": "2.0.0",
   "description": "Noor - A beautiful Quran and Sunnah exploration app with strong focus on Taqwa",
-  "main": "server.js",
+  
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "dev": "next dev",
