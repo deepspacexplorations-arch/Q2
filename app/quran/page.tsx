@@ -9,7 +9,7 @@ export default function QuranPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [surah, setSurah] = useState(1)
   const [surahs, setSurahs] = useState([])
-  const [verses, setVerses] = useState([])
+  const [verses, setVerses] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [fontSize, setFontSize] = useState(17)
   const [translation, setTranslation] = useState('en.sahih')
@@ -25,12 +25,22 @@ export default function QuranPage() {
   // Load surah verses
   useEffect(() => {
     setLoading(true)
+    
     Promise.all([
       fetch(`https://api.alquran.cloud/v1/surah/${surah}`).then(r => r.json()),
       fetch(`https://api.alquran.cloud/v1/surah/${surah}/${translation}`).then(r => r.json())
     ])
       .then(([ar, tr]) => {
-        setVerses(ar.data?.ayahs || [])
+        const arabicVerses = ar.data?.ayahs || []
+        const translationVerses = tr.data?.ayahs || []
+        
+        // Merge Arabic and translation
+        const merged = arabicVerses.map((v: any, idx: number) => ({
+          ...v,
+          translationText: translationVerses[idx]?.text || ''
+        }))
+        
+        setVerses(merged)
         setLoading(false)
       })
       .catch(e => {
@@ -77,15 +87,19 @@ export default function QuranPage() {
         <div className={styles.content} style={{ '--base-font': `${fontSize}px` } as any}>
           {loading ? (
             <div className={styles.loading}>Loading verses...</div>
+          ) : verses.length === 0 ? (
+            <div className={styles.loading}>No verses found. Please check your connection.</div>
           ) : (
             verses.map((verse: any, idx: number) => (
               <div key={idx} className={styles.verse}>
-                <div className={styles.verseNumber}>{verse.numberInSurah}</div>
-                <div className={styles.verseArabic} dir="rtl" lang="ar">
+                <div className={styles.verseHeader}>
+                  <span className={styles.verseNumber}>{verse.numberInSurah}</span>
+                </div>
+                <div className={styles.verseArabic} dir="rtl" lang="ar" style={{ fontSize: `${fontSize + 11}px` }}>
                   {verse.text}
                 </div>
-                <div className={styles.verseTranslation}>
-                  {verse.numberInSurah} • {verse.text.substring(0, 50)}...
+                <div className={styles.verseTranslation} style={{ fontSize: `${fontSize}px` }}>
+                  <strong>{verse.numberInSurah}.</strong> {verse.translationText || 'Translation not available'}
                 </div>
               </div>
             ))
