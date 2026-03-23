@@ -1,13 +1,21 @@
 {
   "name": "noor-quran-sunnah",
-  "version": "2.1.0",
-  "description": "Noor - Quran & Sunnah Reading Platform",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Noor - A beautiful Quran and Sunnah exploration app with strong focus on Taqwa",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
-  "keywords": ["quran", "sunnah", "hadith", "islamic"],
-  "author": "Noor",
-  "license": "MIT"
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/react": "^18.2.0",
+    "@types/node": "^20.0.0"
+  }
 }
