@@ -119,7 +119,7 @@
 }
 
 .verseArabic {
-  font-family: 'Amiri', serif;
+  font-family: "Al QuranWBW", serif;
   font-size: var(--base-font, 17px);
   line-height: 2.2;
   color: var(--primary);
