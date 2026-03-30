@@ -35,7 +35,7 @@
 }
 
 .arabicText {
-  font-family: 'Amiri', serif;
+  font-family: "Al QuranWBW", serif;
   font-size: 1.5rem;
   line-height: 2;
   color: var(--accent-light);
@@ -65,7 +65,7 @@
 }
 
 .noor {
-  font-family: 'Amiri', serif;
+  font-family: "Al QuranWBW", serif;
   font-size: 5rem;
   color: var(--accent-light);
   display: block;
